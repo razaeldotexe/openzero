@@ -9,6 +9,7 @@ Bot Discord sederhana yang dibangun menggunakan **Discord.js v14** dengan strukt
 - **Activity Status**: Status bot kustom otomatis saat aktif.
 - **Wikipedia Integration**: Pencarian informasi langsung dari Wikipedia dengan navigasi halaman.
 - **Open Library Integration**: Mencari koleksi buku di seluruh dunia melalui Open Library API.
+- **ArXiv Integration**: Mencari makalah ilmiah dan jurnal akademik di arXiv.
 
 ## Prasyarat
 - Node.js v16.11.0 ke atas.

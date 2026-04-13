@@ -7,6 +7,8 @@ Bot Discord sederhana yang dibangun menggunakan **Discord.js v14** dengan strukt
 - **ES Modules**: Menggunakan sintaks `import/export` terbaru.
 - **Prefix Command**: Menggunakan prefix `!` untuk menjalankan perintah.
 - **Activity Status**: Status bot kustom otomatis saat aktif.
+- **Wikipedia Integration**: Pencarian informasi langsung dari Wikipedia dengan navigasi halaman.
+- **Open Library Integration**: Mencari koleksi buku di seluruh dunia melalui Open Library API.
 
 ## Prasyarat
 - Node.js v16.11.0 ke atas.

@@ -1,0 +1,25 @@
+{
+  "name": "open-0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/razaeldotexe/open-0.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/razaeldotexe/open-0/issues"
+  },
+  "homepage": "https://github.com/razaeldotexe/open-0#readme",
+  "dependencies": {
+    "discord.js": "^14.26.2",
+    "dotenv": "^17.4.2"
+  }
+}

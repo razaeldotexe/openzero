@@ -1,6 +1,7 @@
 import { ActionRowBuilder, StringSelectMenuBuilder, ComponentType } from 'discord.js';
 import { fetchAllTutorialsEmbeds, fetchAllTutorialsRaw } from '../API/github_manager.js';
 import { findRelevantFileWithAI } from '../API/ai_manager.js';
+import Logger from '../utils/logger.js';
 
 export default {
     name: 'gettutorial',
@@ -10,11 +11,10 @@ export default {
         const loadingMsg = await message.reply('Sedang mencari tutorial yang relevan...');
 
         try {
-            // Jika ada query pencarian
             if (args.length > 0) {
                 const query = args.join(' ');
+                Logger.info(`AI search query: ${query}`);
 
-                // 1. Ambil semua raw content untuk AI
                 const rawFiles = await fetchAllTutorialsRaw();
 
                 if (!rawFiles || rawFiles.size === 0) {
@@ -22,15 +22,14 @@ export default {
                 }
 
                 try {
-                    // 2. Gunakan AI untuk mencari file yang relevan
                     const matchedFileName = await findRelevantFileWithAI(query, rawFiles);
 
                     if (matchedFileName) {
-                        // 3. Ambil embeds untuk file yang ditemukan
                         const allTutorials = await fetchAllTutorialsEmbeds();
                         const embeds = allTutorials.get(matchedFileName);
 
                         if (embeds) {
+                            Logger.info(`Found relevant file: ${matchedFileName}`);
                             return loadingMsg.edit({
                                 content: `AI menemukan tutorial yang paling relevan: **${matchedFileName}**`,
                                 embeds,
@@ -49,7 +48,6 @@ export default {
                 }
             }
 
-            // Jika TIDAK ADA query, tampilkan menu seperti biasa
             const allTutorials = await fetchAllTutorialsEmbeds();
             const fileNames = Array.from(allTutorials.keys());
 
@@ -100,8 +98,8 @@ export default {
                 });
             });
         } catch (error) {
-            console.error('Tutorial Search Error:', error);
-            loadingMsg.edit('❌ Terjadi kesalahan saat memproses permintaan tutorial.');
+            Logger.error('Tutorial Search Error:', error);
+            loadingMsg.edit('Terjadi kesalahan saat memproses permintaan tutorial.');
         }
     },
 };

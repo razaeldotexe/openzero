@@ -1,8 +1,18 @@
 import arxiv
 import sys
 import json
+import logging
+
+# Setup Logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] [%(levelname)s] %(message)s',
+    datefmt='%Y-%m-%dT%H:%M:%S'
+)
+logger = logging.getLogger(__name__)
 
 def fetch_arxiv(query, max_results=10):
+    logger.info(f"Searching ArXiv for query: {query}")
     client = arxiv.Client()
     search = arxiv.Search(
         query=query,
@@ -22,8 +32,10 @@ def fetch_arxiv(query, max_results=10):
                 "pdf_url": r.pdf_url,
                 "primary_category": r.primary_category
             })
+        logger.info(f"Found {len(results)} results")
         return results
     except Exception as e:
+        logger.error(f"ArXiv Search Error: {str(e)}")
         return {"error": str(e)}
 
 if __name__ == "__main__":

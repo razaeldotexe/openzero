@@ -7,8 +7,13 @@ import {
 } from 'discord.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Logger from '../utils/logger.js';
 
 const execPromise = promisify(exec);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
     name: 'wikipedia',
@@ -24,10 +29,11 @@ export default {
         const loadingMsg = await message.reply('Sedang mengumpulkan data dari Wikipedia...');
 
         try {
-            const { stdout, stderr } = await execPromise(`python API/wiki_fetcher.py "${query}"`);
+            const scriptPath = path.join(__dirname, '..', 'API', 'python', 'wiki_fetcher.py');
+            const { stdout, stderr } = await execPromise(`python "${scriptPath}" "${query}"`);
 
             if (stderr) {
-                console.error('Python Error:', stderr);
+                Logger.error('Wikipedia Python Error:', stderr);
                 return loadingMsg.edit('Terjadi kesalahan teknis saat mengambil data.');
             }
 
@@ -37,7 +43,6 @@ export default {
                 return loadingMsg.edit(data.error);
             }
 
-            // Membagi teks menjadi beberapa halaman
             const splitText = (text, maxLength) => {
                 const chunks = [];
                 for (let i = 0; i < text.length; i += maxLength) {
@@ -46,12 +51,12 @@ export default {
                 return chunks;
             };
 
-            const pages = splitText(data.summary, 700); // 700 karakter agar muat lebih banyak field
+            const pages = splitText(data.summary, 700);
             let currentPage = 0;
 
             const createEmbed = (pageIndex) => {
                 const embed = new EmbedBuilder()
-                    .setColor('#20f0f2') // Warna Biru Wikipedia
+                    .setColor('#20f0f2')
                     .setAuthor({
                         name: `Diminta oleh ${message.author.username}`,
                         iconURL: message.author.displayAvatarURL({ dynamic: true }),
@@ -102,7 +107,7 @@ export default {
             if (pages.length > 1) {
                 const collector = response.createMessageComponentCollector({
                     componentType: ComponentType.Button,
-                    time: 120000, // Aktif selama 2 menit
+                    time: 120000,
                 });
 
                 collector.on('collect', async (interaction) => {
@@ -134,7 +139,7 @@ export default {
                 });
             }
         } catch (error) {
-            console.error('Execution Error:', error);
+            Logger.error('Wikipedia Execution Error:', error);
             loadingMsg.edit('Gagal menghubungi layanan Wikipedia.');
         }
     },

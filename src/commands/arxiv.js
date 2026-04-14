@@ -7,8 +7,13 @@ import {
 } from 'discord.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Logger from '../utils/logger.js';
 
 const execPromise = promisify(exec);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
     name: 'arxiv',
@@ -24,11 +29,11 @@ export default {
         const loadingMsg = await message.reply('Sedang mencari makalah di arXiv...');
 
         try {
-            // Gunakan kutipan ganda untuk menangani spasi dalam query
-            const { stdout, stderr } = await execPromise(`python API/arxiv_fetcher.py "${query}"`);
+            const scriptPath = path.join(__dirname, '..', 'API', 'python', 'arxiv_fetcher.py');
+            const { stdout, stderr } = await execPromise(`python "${scriptPath}" "${query}"`);
 
             if (stderr) {
-                console.error('ArXiv Python Error:', stderr);
+                Logger.error('ArXiv Python Error:', stderr);
                 return loadingMsg.edit('Terjadi kesalahan teknis saat mengambil data.');
             }
 
@@ -54,7 +59,7 @@ export default {
                         : paper.summary;
 
                 return new EmbedBuilder()
-                    .setColor('#20f0f2') // Warna khas arXiv
+                    .setColor('#20f0f2')
                     .setAuthor({
                         name: `Diminta oleh ${message.author.username}`,
                         iconURL: message.author.displayAvatarURL({ dynamic: true }),
@@ -133,7 +138,7 @@ export default {
                 });
             }
         } catch (error) {
-            console.error('ArXiv Error:', error);
+            Logger.error('ArXiv Error:', error);
             loadingMsg.edit('Terjadi kesalahan saat memproses data arXiv.');
         }
     },

@@ -9,28 +9,30 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import Logger from '../utils/logger.js';
 
 const execPromise = promisify(exec);
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
     name: 'nerdfont',
     aliases: ['nf'],
-    description: 'Cari atau list font dari Nerd Fonts',
+    description: 'Cari dan download Nerd Fonts',
     async execute(message, args) {
+        if (!args.length) {
+            return message.reply('Mohon berikan nama font yang dicari. Contoh: `!nf jetbrains`');
+        }
+
         const query = args.join(' ');
-        const loadingMsg = await message.reply('Sedang mengambil data dari Nerd Fonts...');
+        const loadingMsg = await message.reply('Sedang mencari font...');
 
         try {
-            const pythonScript = path.join(__dirname, '..', 'API', 'nerdfont_fetcher.py');
-            const commandLine = query
-                ? `python "${pythonScript}" "${query}"`
-                : `python "${pythonScript}"`;
-
-            const { stdout, stderr } = await execPromise(commandLine);
+            const scriptPath = path.join(__dirname, '..', 'API', 'python', 'nerdfont_fetcher.py');
+            const { stdout, stderr } = await execPromise(`python "${scriptPath}" "${query}"`);
 
             if (stderr) {
-                console.error('Python Error:', stderr);
+                Logger.error('NerdFont Python Error:', stderr);
                 return loadingMsg.edit('Terjadi kesalahan teknis saat mengambil data.');
             }
 
@@ -41,129 +43,88 @@ export default {
             }
 
             if (!Array.isArray(data) || data.length === 0) {
-                return loadingMsg.edit('Tidak ada font yang ditemukan.');
+                return loadingMsg.edit(`Tidak ada font yang ditemukan untuk "${query}".`);
             }
 
-            let currentPage = 0;
-            const totalPages = data.length;
+            const fonts = data;
+            let currentIdx = 0;
 
-            const createEmbed = (index) => {
-                const font = data[index];
-                const embed = new EmbedBuilder()
+            const createEmbed = (idx) => {
+                const font = fonts[idx];
+                return new EmbedBuilder()
                     .setColor('#20f0f2')
-                    .setAuthor({
-                        name: `Diminta oleh ${message.author.username}`,
-                        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-                    })
-                    .setTitle(`${font.unpatchedName} Nerd Font`)
-                    .setURL(`https://www.nerdfonts.com/font-downloads`)
-                    .setThumbnail(
-                        'https://www.nerdfonts.com/assets/img/logos/nerd-fonts-logo-white.png'
-                    )
-                    .setDescription(font.description || 'Tidak ada deskripsi tersedia.')
+                    .setTitle(font.patchedName)
+                    .setDescription(`Font Family: **${font.unpatchedName}**`)
                     .addFields(
-                        { name: 'Folder Name', value: `\`${font.folderName}\``, inline: true },
-                        { name: 'Version', value: `\`${font.version}\``, inline: true },
-                        { name: 'License', value: font.licenseId || 'Unknown', inline: true },
+                        { name: 'Folder Name', value: font.folderName, inline: true },
                         {
-                            name: 'Source',
-                            value: `[Nerd Fonts Website](https://www.nerdfonts.com/)`,
+                            name: 'Download Link',
+                            value: `[Klik di sini untuk Download (.zip)](${font.downloadUrl})`,
                             inline: false,
                         }
                     )
                     .setFooter({
-                        text: `Halaman ${index + 1} dari ${totalPages} • Nerd Fonts`,
-                        iconURL: 'https://www.nerdfonts.com/assets/img/logos/nerd-fonts-logo.png',
+                        text: `Hasil ${idx + 1} dari ${fonts.length} • Nerd Fonts API`,
                     })
                     .setTimestamp();
-
-                return embed;
             };
 
-            const createButtons = (index) => {
-                const font = data[index];
-
-                // Rows
-                const row1 = new ActionRowBuilder().addComponents(
+            const createButtons = (idx) => {
+                return new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
-                        .setCustomId('prev')
-                        .setLabel('Prev')
-                        .setStyle(ButtonStyle.Secondary)
-                        .setDisabled(index === 0),
+                        .setCustomId('prev_font')
+                        .setLabel('Sebelumnya')
+                        .setStyle(ButtonStyle.Primary)
+                        .setDisabled(idx === 0),
                     new ButtonBuilder()
-                        .setCustomId('next')
-                        .setLabel('Next')
-                        .setStyle(ButtonStyle.Secondary)
-                        .setDisabled(index === totalPages - 1)
+                        .setCustomId('next_font')
+                        .setLabel('Berikutnya')
+                        .setStyle(ButtonStyle.Primary)
+                        .setDisabled(idx === fonts.length - 1)
                 );
-
-                const row2 = new ActionRowBuilder().addComponents(
-                    new ButtonBuilder()
-                        .setLabel('Download (Zip)')
-                        .setURL(
-                            `https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font.folderName}.zip`
-                        )
-                        .setStyle(ButtonStyle.Link),
-                    new ButtonBuilder()
-                        .setLabel('GitHub Source')
-                        .setURL(
-                            `https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/${font.folderName}`
-                        )
-                        .setStyle(ButtonStyle.Link),
-                    new ButtonBuilder()
-                        .setLabel('All Fonts')
-                        .setURL('https://www.nerdfonts.com/font-downloads')
-                        .setStyle(ButtonStyle.Link)
-                );
-
-                return [row1, row2];
             };
 
-            const options = {
-                content: null,
-                embeds: [createEmbed(0)],
-                components: createButtons(0),
-            };
-            const response = await loadingMsg.edit(options);
+            const options = { content: null, embeds: [createEmbed(0)] };
+            if (fonts.length > 1) {
+                options.components = [createButtons(0)];
+            }
 
-            const collector = response.createMessageComponentCollector({
-                componentType: ComponentType.Button,
-                time: 300000, // Aktif selama 5 menit
-            });
+            const responseMsg = await loadingMsg.edit(options);
 
-            collector.on('collect', async (interaction) => {
-                if (interaction.user.id !== message.author.id) {
-                    return interaction.reply({
-                        content: 'Anda tidak memiliki akses ke navigasi ini.',
-                        ephemeral: true,
-                    });
-                }
-
-                if (interaction.customId === 'prev') {
-                    currentPage = Math.max(0, currentPage - 1);
-                } else if (interaction.customId === 'next') {
-                    currentPage = Math.min(totalPages - 1, currentPage + 1);
-                }
-
-                await interaction.update({
-                    embeds: [createEmbed(currentPage)],
-                    components: createButtons(currentPage),
+            if (fonts.length > 1) {
+                const collector = responseMsg.createMessageComponentCollector({
+                    componentType: ComponentType.Button,
+                    time: 60000,
                 });
-            });
 
-            collector.on('end', () => {
-                const disabledRow = new ActionRowBuilder().addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('p')
-                        .setLabel('Session Ended')
-                        .setStyle(ButtonStyle.Secondary)
-                        .setDisabled(true)
-                );
-                response.edit({ components: [disabledRow] }).catch(() => {});
-            });
+                collector.on('collect', async (interaction) => {
+                    if (interaction.user.id !== message.author.id) {
+                        return interaction.reply({ content: 'Akses ditolak.', ephemeral: true });
+                    }
+
+                    if (interaction.customId === 'prev_font') currentIdx--;
+                    else if (interaction.customId === 'next_font') currentIdx++;
+
+                    await interaction.update({
+                        embeds: [createEmbed(currentIdx)],
+                        components: [createButtons(currentIdx)],
+                    });
+                });
+
+                collector.on('end', () => {
+                    const disabledRow = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('done')
+                            .setLabel('Pencarian Selesai')
+                            .setStyle(ButtonStyle.Secondary)
+                            .setDisabled(true)
+                    );
+                    responseMsg.edit({ components: [disabledRow] }).catch(() => {});
+                });
+            }
         } catch (error) {
-            console.error('Execution Error:', error);
-            loadingMsg.edit('Gagal menghubungi layanan Nerd Fonts.');
+            Logger.error('NerdFont Error:', error);
+            loadingMsg.edit('Terjadi kesalahan saat memproses data font.');
         }
     },
 };

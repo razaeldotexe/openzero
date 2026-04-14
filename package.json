@@ -1,14 +1,15 @@
 {
     "name": "open-0",
     "version": "1.0.0",
-    "description": "",
+    "description": "Modular Discord bot for searching Open Data",
     "main": "src/index.js",
     "scripts": {
         "start": "node src/index.js",
         "dev": "nodemon src/index.js",
         "test": "node --test",
         "lint": "eslint src/",
-        "format": "prettier --write src/"
+        "format": "prettier --write src/ && npm run format:python",
+        "format:python": "ruff format src/API/python/*.py || black src/API/python/*.py || echo 'Please install ruff or black to format Python files'"
     },
     "repository": {
         "type": "git",

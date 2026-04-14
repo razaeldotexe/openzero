@@ -6,17 +6,18 @@ import logging
 # Setup Logging
 logging.basicConfig(
     level=logging.INFO,
-    format='[%(asctime)s] [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%dT%H:%M:%S'
+    format="[%(asctime)s] [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
 )
 logger = logging.getLogger(__name__)
 
-def fetch_wikipedia_data(query, lang='id'):
+
+def fetch_wikipedia_data(query, lang="id"):
     logger.info(f"Searching Wikipedia for: {query} (lang: {lang})")
     wiki = wikipediaapi.Wikipedia(
-        user_agent='MyDiscordBot/1.0 (https://github.com/razaeldotexe/open-0)',
+        user_agent="MyDiscordBot/1.0 (https://github.com/razaeldotexe/open-0)",
         language=lang,
-        extract_format=wikipediaapi.ExtractFormat.WIKI
+        extract_format=wikipediaapi.ExtractFormat.WIKI,
     )
 
     page = wiki.page(query)
@@ -30,9 +31,10 @@ def fetch_wikipedia_data(query, lang='id'):
         "summary": page.summary,
         "fullurl": page.fullurl,
     }
-    
+
     logger.info(f"Fetched page: {page.title}")
     return data
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

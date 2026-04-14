@@ -80,15 +80,21 @@ function processMarkdownToEmbeds(content, fileName) {
 async function handleFetchResponse(response, context = '') {
     if (!response.ok) {
         const text = await response.text();
-        Logger.error(`API Error (${context}): Status ${response.status}. Response: ${text.slice(0, 100)}...`);
+        Logger.error(
+            `API Error (${context}): Status ${response.status}. Response: ${text.slice(0, 100)}...`
+        );
         throw new Error(`API service returned an error: ${response.status}`);
     }
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
         const text = await response.text();
-        Logger.error(`Expected JSON but got: ${contentType} in ${context}. Content preview: ${text.slice(0, 100)}...`);
-        throw new Error('API returned HTML instead of JSON. Check if your API_URL is correct and the service is awake.');
+        Logger.error(
+            `Expected JSON but got: ${contentType} in ${context}. Content preview: ${text.slice(0, 100)}...`
+        );
+        throw new Error(
+            'API returned HTML instead of JSON. Check if your API_URL is correct and the service is awake.'
+        );
     }
 
     return response.json();
@@ -125,7 +131,7 @@ export async function fetchAllTutorialsRaw() {
                     path: file.path,
                 }),
             });
-            
+
             if (contentResp.ok) {
                 const fileData = await handleFetchResponse(contentResp, `Fetch ${file.name}`);
                 if (fileData.content) {
@@ -176,7 +182,7 @@ export async function fetchAllTutorialsEmbeds() {
                     path: file.path,
                 }),
             });
-            
+
             if (contentResp.ok) {
                 const fileData = await handleFetchResponse(contentResp, `Fetch Embed ${file.name}`);
                 if (fileData.content) {

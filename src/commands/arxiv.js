@@ -14,13 +14,17 @@ import Logger from '../utils/logger.js';
 async function handleFetchResponse(response, context = '') {
     if (!response.ok) {
         const text = await response.text();
-        Logger.error(`API Error (${context}): Status ${response.status}. Response: ${text.slice(0, 100)}...`);
+        Logger.error(
+            `API Error (${context}): Status ${response.status}. Response: ${text.slice(0, 100)}...`
+        );
         throw new Error(`API service returned an error: ${response.status}`);
     }
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
         const text = await response.text();
-        Logger.error(`Expected JSON but got: ${contentType} in ${context}. Content preview: ${text.slice(0, 100)}...`);
+        Logger.error(
+            `Expected JSON but got: ${contentType} in ${context}. Content preview: ${text.slice(0, 100)}...`
+        );
         throw new Error('API returned HTML instead of JSON. Check if your API_URL is correct.');
     }
     return response.json();

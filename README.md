@@ -1,7 +1,7 @@
 # OpenZero
 
 <p align="center">
-  <img src="./assets/openzero_full.png" width="600" alt="OpenZero Logo">
+  <img src="/assets/openzero_full.png" width="100" alt="OpenZero Logo">
 </p>
 
 OpenZero is a modular Discord bot designed as a research and development assistant. It connects users directly to various Open Data sources through simple text commands.

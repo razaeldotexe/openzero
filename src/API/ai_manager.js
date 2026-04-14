@@ -1,4 +1,25 @@
 import { config } from '../config.js';
+import Logger from '../utils/logger.js';
+
+/**
+ * Helper to handle AI fetch responses and check for JSON.
+ */
+async function handleAIResponse(response, provider) {
+    if (!response.ok) {
+        const text = await response.text();
+        Logger.error(`AI Provider Error (${provider}): Status ${response.status}. Response: ${text.slice(0, 100)}...`);
+        throw new Error(`AI Provider ${provider} returned an error: ${response.status}`);
+    }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        Logger.error(`AI Provider ${provider} expected JSON but got: ${contentType}. Content preview: ${text.slice(0, 100)}...`);
+        throw new Error(`AI Provider ${provider} returned HTML instead of JSON. This usually means a limit was hit or the service is down.`);
+    }
+
+    return response.json();
+}
 
 /**
  * Melakukan pencarian file yang paling relevan menggunakan AI dengan sistem fallback.
@@ -27,23 +48,21 @@ ${fileContext}`;
     const providers = [
         { name: 'Gemini', fn: tryGemini },
         { name: 'Groq', fn: tryGroq },
-        { name: 'OpenRouter', fn: tryOpenRouter },
+        { name: 'OpenRouter', fn: tryOpenRouter }
     ];
 
     for (const provider of providers) {
         try {
-            console.log(`[AI Search] Trying ${provider.name}...`);
+            Logger.info(`[AI Search] Trying ${provider.name}...`);
             const result = await provider.fn(prompt);
             if (result && result !== 'none') {
                 // Pastikan result ada di daftar file kita
-                const matchedFile = Array.from(files.keys()).find(
-                    (f) => f.toLowerCase() === result.toLowerCase() || result.includes(f)
-                );
+                const matchedFile = Array.from(files.keys()).find(f => f.toLowerCase() === result.toLowerCase() || result.includes(f));
                 if (matchedFile) return matchedFile;
             }
             if (result === 'none') return null;
         } catch (error) {
-            console.error(`[AI Search] ${provider.name} failed:`, error.message);
+            Logger.error(`[AI Search] ${provider.name} failed:`, error.message);
             // Lanjut ke provider berikutnya
         }
     }
@@ -57,12 +76,11 @@ async function tryGemini(prompt) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-        }),
+            contents: [{ parts: [{ text: prompt }] }]
+        })
     });
 
-    if (!response.ok) throw new Error(`Status ${response.status}`);
-    const data = await response.json();
+    const data = await handleAIResponse(response, 'Gemini');
     return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 }
 
@@ -70,17 +88,16 @@ async function tryGroq(prompt) {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
-            Authorization: `Bearer ${config.groqApiKey}`,
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${config.groqApiKey}`,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             model: 'llama-3.1-8b-instant',
-            messages: [{ role: 'user', content: prompt }],
-        }),
+            messages: [{ role: 'user', content: prompt }]
+        })
     });
 
-    if (!response.ok) throw new Error(`Status ${response.status}`);
-    const data = await response.json();
+    const data = await handleAIResponse(response, 'Groq');
     return data.choices?.[0]?.message?.content?.trim();
 }
 
@@ -88,16 +105,15 @@ async function tryOpenRouter(prompt) {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-            Authorization: `Bearer ${config.openrouterApiKey}`,
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${config.openrouterApiKey}`,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             model: 'meta-llama/llama-3.1-8b-instruct:free',
-            messages: [{ role: 'user', content: prompt }],
-        }),
+            messages: [{ role: 'user', content: prompt }]
+        })
     });
 
-    if (!response.ok) throw new Error(`Status ${response.status}`);
-    const data = await response.json();
+    const data = await handleAIResponse(response, 'OpenRouter');
     return data.choices?.[0]?.message?.content?.trim();
 }

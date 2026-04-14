@@ -8,6 +8,24 @@ import {
 import { config } from '../config.js';
 import Logger from '../utils/logger.js';
 
+/**
+ * Helper to handle fetch responses and check for JSON.
+ */
+async function handleFetchResponse(response, context = '') {
+    if (!response.ok) {
+        const text = await response.text();
+        Logger.error(`API Error (${context}): Status ${response.status}. Response: ${text.slice(0, 100)}...`);
+        throw new Error(`API service returned an error: ${response.status}`);
+    }
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        Logger.error(`Expected JSON but got: ${contentType} in ${context}. Content preview: ${text.slice(0, 100)}...`);
+        throw new Error('API returned HTML instead of JSON. Check if your API_URL is correct.');
+    }
+    return response.json();
+}
+
 export default {
     name: 'arxiv',
     description: 'Cari makalah ilmiah di arXiv',
@@ -23,7 +41,7 @@ export default {
 
         try {
             const response = await fetch(`${config.apiUrl}/arxiv?q=${encodeURIComponent(query)}`);
-            const data = await response.json();
+            const data = await handleFetchResponse(response, 'ArXiv Search');
 
             if (data.error) {
                 return loadingMsg.edit(data.error);
@@ -124,8 +142,8 @@ export default {
                 });
             }
         } catch (error) {
-            Logger.error('ArXiv Error:', error);
-            loadingMsg.edit('Terjadi kesalahan saat memproses data arXiv.');
+            Logger.error('ArXiv Error:', error.message);
+            loadingMsg.edit(`Gagal mengambil data: ${error.message}`);
         }
     },
 };

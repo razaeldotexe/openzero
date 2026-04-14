@@ -8,6 +8,24 @@ import {
 import { config } from '../config.js';
 import Logger from '../utils/logger.js';
 
+/**
+ * Helper to handle fetch responses and check for JSON.
+ */
+async function handleFetchResponse(response, context = '') {
+    if (!response.ok) {
+        const text = await response.text();
+        Logger.error(`API Error (${context}): Status ${response.status}. Response: ${text.slice(0, 100)}...`);
+        throw new Error(`API service returned an error: ${response.status}`);
+    }
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        Logger.error(`Expected JSON but got: ${contentType} in ${context}. Content preview: ${text.slice(0, 100)}...`);
+        throw new Error('API returned HTML instead of JSON. Check if your API_URL is correct.');
+    }
+    return response.json();
+}
+
 export default {
     name: 'wikipedia',
     description: 'Cari informasi di Wikipedia dengan tampilan keren',
@@ -22,10 +40,8 @@ export default {
         const loadingMsg = await message.reply('Sedang mengumpulkan data dari Wikipedia...');
 
         try {
-            const response = await fetch(
-                `${config.apiUrl}/wikipedia?q=${encodeURIComponent(query)}&lang=id`
-            );
-            const data = await response.json();
+            const response = await fetch(`${config.apiUrl}/wikipedia?q=${encodeURIComponent(query)}&lang=id`);
+            const data = await handleFetchResponse(response, 'Wikipedia Search');
 
             if (data.error) {
                 return loadingMsg.edit(data.error);
@@ -127,8 +143,8 @@ export default {
                 });
             }
         } catch (error) {
-            Logger.error('Wikipedia Error:', error);
-            loadingMsg.edit('Gagal menghubungi layanan Wikipedia.');
+            Logger.error('Wikipedia Error:', error.message);
+            loadingMsg.edit(`Gagal mengambil data: ${error.message}`);
         }
     },
 };

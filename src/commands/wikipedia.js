@@ -22,7 +22,9 @@ export default {
         const loadingMsg = await message.reply('Sedang mengumpulkan data dari Wikipedia...');
 
         try {
-            const response = await fetch(`${config.apiUrl}/wikipedia?q=${encodeURIComponent(query)}&lang=id`);
+            const response = await fetch(
+                `${config.apiUrl}/wikipedia?q=${encodeURIComponent(query)}&lang=id`
+            );
             const data = await response.json();
 
             if (data.error) {

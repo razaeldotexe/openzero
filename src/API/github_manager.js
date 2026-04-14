@@ -10,10 +10,11 @@ function processMarkdownToEmbeds(content, fileName) {
     let footerText = 'OpenZero Resource';
     let title = fileName.replace('.md', '');
 
-    const footerRegex = /submitted to \[r\/MorpheApp\]\(https:\/\/www\.reddit\.com\/r\/MorpheApp\) by \[u\/HundEdFeteTree\]\(https:\/\/www\.reddit\.com\/user\/HundEdFeteTree\)/i;
+    const footerRegex =
+        /submitted to \[r\/MorpheApp\]\(https:\/\/www\.reddit\.com\/r\/MorpheApp\) by \[u\/HundEdFeteTree\]\(https:\/\/www\.reddit\.com\/user\/HundEdFeteTree\)/i;
     const footerMatch = body.match(footerRegex);
     if (footerMatch) {
-        footerText = "Submitted to r/MorpheApp by u/HundEdFeteTree";
+        footerText = 'Submitted to r/MorpheApp by u/HundEdFeteTree';
         body = body.replace(footerRegex, '').trim();
     }
 
@@ -21,7 +22,10 @@ function processMarkdownToEmbeds(content, fileName) {
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].startsWith('# ')) {
             title = lines[i].replace('# ', '').trim();
-            body = lines.slice(i + 1).join('\n').trim();
+            body = lines
+                .slice(i + 1)
+                .join('\n')
+                .trim();
             break;
         }
     }
@@ -38,11 +42,12 @@ function processMarkdownToEmbeds(content, fileName) {
             .setColor('#2dba4e')
             .setFooter({ text: footerText })
             .setTimestamp();
-        
+
         if (idx === 1) {
             embed.setAuthor({
                 name: 'GitHub Resource',
-                iconURL: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+                iconURL:
+                    'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
             });
         }
         return embed;
@@ -52,7 +57,7 @@ function processMarkdownToEmbeds(content, fileName) {
         embeds.push(createBaseEmbed(1).setDescription(body || 'Tidak ada konten.'));
     } else {
         for (const paragraph of paragraphs) {
-            if ((currentChunk.length + paragraph.length + 1) > maxDescriptionLength) {
+            if (currentChunk.length + paragraph.length + 1 > maxDescriptionLength) {
                 embeds.push(createBaseEmbed(chunkIndex).setDescription(currentChunk || '...'));
                 currentChunk = paragraph + '\n';
                 chunkIndex++;
@@ -80,8 +85,8 @@ export async function fetchAllTutorialsRaw() {
                 owner: githubRepoOwner,
                 repo: githubRepoName,
                 token: githubToken,
-                path: ''
-            })
+                path: '',
+            }),
         });
 
         const files = await response.json();
@@ -97,8 +102,8 @@ export async function fetchAllTutorialsRaw() {
                     owner: githubRepoOwner,
                     repo: githubRepoName,
                     token: githubToken,
-                    path: file.path
-                })
+                    path: file.path,
+                }),
             });
             const fileData = await contentResp.json();
             if (fileData.content) {
@@ -124,8 +129,8 @@ export async function fetchAllTutorialsEmbeds() {
                 owner: githubRepoOwner,
                 repo: githubRepoName,
                 token: githubToken,
-                path: ''
-            })
+                path: '',
+            }),
         });
 
         const files = await response.json();
@@ -141,8 +146,8 @@ export async function fetchAllTutorialsEmbeds() {
                     owner: githubRepoOwner,
                     repo: githubRepoName,
                     token: githubToken,
-                    path: file.path
-                })
+                    path: file.path,
+                }),
             });
             const fileData = await contentResp.json();
             if (fileData.content) {

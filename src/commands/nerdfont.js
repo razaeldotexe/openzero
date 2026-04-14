@@ -14,16 +14,16 @@ export default {
     description: 'Cari dan download Nerd Fonts',
     async execute(message, args) {
         if (!args.length) {
-            return message.reply(
-                'Mohon berikan nama font yang dicari. Contoh: `!nf jetbrains`'
-            );
+            return message.reply('Mohon berikan nama font yang dicari. Contoh: `!nf jetbrains`');
         }
 
         const query = args.join(' ');
         const loadingMsg = await message.reply('Sedang mencari font...');
 
         try {
-            const response = await fetch(`${config.apiUrl}/nerdfont?q=${encodeURIComponent(query)}`);
+            const response = await fetch(
+                `${config.apiUrl}/nerdfont?q=${encodeURIComponent(query)}`
+            );
             const data = await response.json();
 
             if (data.error) {

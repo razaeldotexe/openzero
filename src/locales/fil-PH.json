@@ -3,7 +3,8 @@
         "loading": "Processing...",
         "error": "An error occurred: {error}",
         "access_denied": "Access denied.",
-        "query_required": "Please provide a search keyword."
+        "query_required": "Please provide a search keyword.",
+        "help_translate": "Help Translate this Bot"
     },
     "commands": {
         "help": {
@@ -25,14 +26,14 @@
             "name": "about",
             "description": "Bot information",
             "title": "About OpenZero",
-            "desc": "OpenZero is a modular research assistant.",
-            "field_research_title": "Research & Literacy",
-            "field_research_value": "Quick access to **arXiv** (scientific papers), **Wikipedia**, and **Open Library** (books).",
-            "field_dev_title": "Developer Tools",
-            "field_dev_value": "Search and direct download of **Nerd Fonts** for terminal/IDE customization.",
+            "desc": "OpenZero is a modular research and server management assistant.",
+            "field_research_title": "Research & AI",
+            "field_research_value": "AI-powered **!tutorial** search, **!arxiv**, **!wikipedia**, and **!openlibrary** access.",
+            "field_dev_title": "Management & Tools",
+            "field_dev_value": "**!full** moderation, **!ticket** systems with MongoDB, **!purge**, and **!nerdfont** search.",
             "field_tech_title": "Technology",
-            "field_tech_value": "Built with **Node.js (Discord.js v14)** and **Python** for data processing.",
-            "footer": "OpenZero Project • Searching Open Data"
+            "field_tech_value": "Built with **Node.js**, **Python (Flask)**, and **MongoDB** with multi-AI support.",
+            "footer": "OpenZero Project • Open Data & Smart Automation"
         },
         "language": {
             "name": "language",
@@ -138,6 +139,23 @@
             "ban_mention": "Mention (@mention) the member you want to ban.",
             "ban_unable": "I cannot ban this member.",
             "ban_success": "🔨 **{tag}** has been permanently banned. Reason: {reason}"
+        },
+        "purge": {
+            "description": "Delete a specified number of messages (Default: 99)",
+            "no_perms": "You need `Manage Messages` permission to use this command.",
+            "success": "✅ Successfully deleted **{amount}** messages."
+        },
+        "ticket": {
+            "description": "Ticket system setup",
+            "setup_title": "Support Ticket System",
+            "setup_desc": "Click the button below to create a private support ticket.",
+            "setup_btn": "Create Ticket",
+            "setup_success": "Ticket system setup successful!",
+            "already_exists": "You already have an open ticket: {channel}",
+            "created_msg": "Hello {user}, welcome to your ticket! Please describe your issue.",
+            "close_btn": "Close Ticket",
+            "closing": "Closing ticket...",
+            "no_perms_setup": "You need `Administrator` permission to setup the ticket system."
         }
     }
 }

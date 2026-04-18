@@ -72,9 +72,7 @@ client.on(Events.MessageCreate, async (message) => {
 
             if (detectedLang) {
                 setLanguage(detectedLang);
-                await message.channel.send(
-                    t('commands.language.auto_detected', { lang: detectedLang })
-                );
+                Logger.info(t('commands.language.auto_detected', { lang: detectedLang }));
             }
         } catch (error) {
             Logger.error('In-command language detection failed:', error);

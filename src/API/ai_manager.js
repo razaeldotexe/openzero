@@ -181,7 +181,11 @@ async function tryGemini(prompt) {
             });
 
             const data = await handleAIResponse(response, 'Gemini', model);
-            return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+            const result = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+            if (result) {
+                Logger.info(`[AI Success] Gemini (${model}) responded successfully.`);
+                return result;
+            }
         } catch (err) {
             Logger.warn(`Gemini model ${model} failed, trying next...`);
         }
@@ -205,7 +209,11 @@ async function tryGroq(prompt) {
             });
 
             const data = await handleAIResponse(response, 'Groq', model);
-            return data.choices?.[0]?.message?.content?.trim();
+            const result = data.choices?.[0]?.message?.content?.trim();
+            if (result) {
+                Logger.info(`[AI Success] Groq (${model}) responded successfully.`);
+                return result;
+            }
         } catch (err) {
             Logger.warn(`Groq model ${model} failed, trying next...`);
         }
@@ -229,7 +237,11 @@ async function tryOpenRouter(prompt) {
             });
 
             const data = await handleAIResponse(response, 'OpenRouter', model);
-            return data.choices?.[0]?.message?.content?.trim();
+            const result = data.choices?.[0]?.message?.content?.trim();
+            if (result) {
+                Logger.info(`[AI Success] OpenRouter (${model}) responded successfully.`);
+                return result;
+            }
         } catch (err) {
             Logger.warn(`OpenRouter model ${model} failed, trying next...`);
         }

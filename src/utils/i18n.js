@@ -60,6 +60,8 @@ export function setLanguage(lang) {
             : {};
         settings.language = lang;
         fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 4));
+        // Reload locales to ensure new translations are available
+        loadLocales();
     } catch (error) {
         Logger.error('Error saving settings.json:', error);
     }

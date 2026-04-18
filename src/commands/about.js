@@ -12,23 +12,23 @@ export default {
             .setDescription(t('commands.about.desc'))
             .addFields(
                 {
-                    name: 'Riset & Literasi',
-                    value: 'Akses cepat ke **arXiv** (makalah ilmiah), **Wikipedia**, dan **Open Library** (buku).',
+                    name: t('commands.about.field_research_title'),
+                    value: t('commands.about.field_research_value'),
                     inline: false,
                 },
                 {
-                    name: 'Developer Tools',
-                    value: 'Pencarian dan download langsung **Nerd Fonts** untuk kustomisasi terminal/IDE.',
+                    name: t('commands.about.field_dev_title'),
+                    value: t('commands.about.field_dev_value'),
                     inline: false,
                 },
                 {
-                    name: 'Teknologi',
-                    value: 'Dibangun dengan **Node.js (Discord.js v14)** dan **Python** untuk pemrosesan data.',
+                    name: t('commands.about.field_tech_title'),
+                    value: t('commands.about.field_tech_value'),
                     inline: false,
                 }
             )
             .setFooter({
-                text: 'OpenZero Project • Searching Open Data',
+                text: t('commands.about.footer'),
                 iconURL: message.client.user.displayAvatarURL(),
             })
             .setTimestamp();

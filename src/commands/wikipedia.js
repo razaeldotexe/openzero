@@ -7,6 +7,7 @@ import {
 } from 'discord.js';
 import { config } from '../config.js';
 import Logger from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
 
 /**
  * Helper to handle fetch responses and check for JSON.
@@ -36,20 +37,20 @@ const API_HEADERS = {
 
 export default {
     name: 'wikipedia',
-    description: 'Cari informasi di Wikipedia dengan tampilan keren',
+    description: t('commands.wikipedia.description'),
     async execute(message, args) {
         if (!args.length) {
-            return message.reply(
-                'Mohon berikan kata kunci pencarian. Contoh: `!wikipedia Discord`'
-            );
+            return message.reply(t('common.query_required'));
         }
 
         const query = args.join(' ');
-        const loadingMsg = await message.reply('Sedang mengumpulkan data dari Wikipedia...');
+        const loadingMsg = await message.reply(t('common.loading'));
 
         try {
+            // Mapping current language to wikipedia lang param if needed
+            // For now, let's just use the query as is, or detect lang from i18n
             const response = await fetch(
-                `${config.apiUrl}/wikipedia?q=${encodeURIComponent(query)}&lang=id`,
+                `${config.apiUrl}/wikipedia?q=${encodeURIComponent(query)}`,
                 {
                     headers: API_HEADERS,
                 }
@@ -75,7 +76,9 @@ export default {
                 const embed = new EmbedBuilder()
                     .setColor('#20f0f2')
                     .setAuthor({
-                        name: `Diminta oleh ${message.author.username}`,
+                        name: t('commands.wikipedia.requested_by', {
+                            username: message.author.username,
+                        }),
                         iconURL: message.author.displayAvatarURL({ dynamic: true }),
                     })
                     .setTitle(data.title)
@@ -85,12 +88,15 @@ export default {
                     )
                     .setDescription(pages[pageIndex] + (pages.length > 1 ? '...' : ''))
                     .addFields({
-                        name: 'Tautan Lengkap',
-                        value: `[Klik di sini untuk baca selengkapnya](${data.fullurl})`,
+                        name: t('commands.wikipedia.full_link'),
+                        value: `[${t('commands.wikipedia.read_more')}](${data.fullurl})`,
                         inline: false,
                     })
                     .setFooter({
-                        text: `Halaman ${pageIndex + 1} dari ${pages.length} • Wikipedia Indonesia`,
+                        text: t('commands.wikipedia.footer', {
+                            current: pageIndex + 1,
+                            total: pages.length,
+                        }),
                         iconURL:
                             'https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png',
                     })
@@ -103,12 +109,12 @@ export default {
                 return new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('prev')
-                        .setLabel('Sebelumnya')
+                        .setLabel(t('commands.wikipedia.prev'))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(pageIndex === 0),
                     new ButtonBuilder()
                         .setCustomId('next')
-                        .setLabel('Berikutnya')
+                        .setLabel(t('commands.wikipedia.next'))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(pageIndex === pages.length - 1)
                 );
@@ -130,7 +136,7 @@ export default {
                 collector.on('collect', async (interaction) => {
                     if (interaction.user.id !== message.author.id) {
                         return interaction.reply({
-                            content: 'Anda tidak memiliki akses ke navigasi ini.',
+                            content: t('common.access_denied'),
                             ephemeral: true,
                         });
                     }
@@ -148,7 +154,7 @@ export default {
                     const disabledRow = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('p')
-                            .setLabel('Selesai')
+                            .setLabel(t('commands.wikipedia.finished'))
                             .setStyle(ButtonStyle.Secondary)
                             .setDisabled(true)
                     );
@@ -157,7 +163,7 @@ export default {
             }
         } catch (error) {
             Logger.error('Wikipedia Error:', error.message);
-            loadingMsg.edit(`Gagal mengambil data: ${error.message}`);
+            loadingMsg.edit(t('common.error', { error: error.message }));
         }
     },
 };

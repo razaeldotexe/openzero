@@ -7,6 +7,7 @@ import {
 } from 'discord.js';
 import { config } from '../config.js';
 import Logger from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
 
 /**
  * Helper to handle fetch responses and check for JSON.
@@ -36,16 +37,14 @@ const API_HEADERS = {
 
 export default {
     name: 'arxiv',
-    description: 'Cari makalah ilmiah di arXiv',
+    description: t('commands.arxiv.description'),
     async execute(message, args) {
         if (!args.length) {
-            return message.reply(
-                'Mohon berikan kata kunci pencarian. Contoh: `!arxiv quantum computing`'
-            );
+            return message.reply(t('common.query_required'));
         }
 
         const query = args.join(' ');
-        const loadingMsg = await message.reply('Sedang mencari makalah di arXiv...');
+        const loadingMsg = await message.reply(t('common.loading'));
 
         try {
             const response = await fetch(`${config.apiUrl}/arxiv?q=${encodeURIComponent(query)}`, {
@@ -58,7 +57,7 @@ export default {
             }
 
             if (!Array.isArray(data) || data.length === 0) {
-                return loadingMsg.edit(`Tidak ada makalah yang ditemukan untuk "${query}".`);
+                return loadingMsg.edit(t('commands.arxiv.no_results', { query }));
             }
 
             const papers = data;
@@ -75,7 +74,9 @@ export default {
                 return new EmbedBuilder()
                     .setColor('#20f0f2')
                     .setAuthor({
-                        name: `Diminta oleh ${message.author.username}`,
+                        name: t('commands.arxiv.requested_by', {
+                            username: message.author.username,
+                        }),
                         iconURL: message.author.displayAvatarURL({ dynamic: true }),
                     })
                     .setTitle(paper.title)
@@ -83,15 +84,30 @@ export default {
                     .setDescription(summary)
                     .addFields(
                         {
-                            name: 'Penulis',
+                            name: t('commands.arxiv.authors'),
                             value: authors.length > 256 ? authors.slice(0, 250) + '...' : authors,
                         },
-                        { name: 'Terbit', value: paper.published, inline: true },
-                        { name: 'Kategori', value: paper.primary_category, inline: true },
-                        { name: 'PDF', value: `[Buka PDF](${paper.pdf_url})`, inline: true }
+                        {
+                            name: t('commands.arxiv.published'),
+                            value: paper.published,
+                            inline: true,
+                        },
+                        {
+                            name: t('commands.arxiv.category'),
+                            value: paper.primary_category,
+                            inline: true,
+                        },
+                        {
+                            name: 'PDF',
+                            value: `[${t('commands.arxiv.open_pdf')}](${paper.pdf_url})`,
+                            inline: true,
+                        }
                     )
                     .setFooter({
-                        text: `Hasil ${idx + 1} dari ${papers.length} | arXiv API`,
+                        text: t('commands.arxiv.footer', {
+                            current: idx + 1,
+                            total: papers.length,
+                        }),
                         iconURL:
                             'https://static.arxiv.org/static/browse/0.3.4/images/icons/apple-touch-icon.png',
                     })
@@ -102,12 +118,12 @@ export default {
                 return new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('prev_paper')
-                        .setLabel('Sebelumnya')
+                        .setLabel(t('commands.arxiv.prev'))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(idx === 0),
                     new ButtonBuilder()
                         .setCustomId('next_paper')
-                        .setLabel('Berikutnya')
+                        .setLabel(t('commands.arxiv.next'))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(idx === papers.length - 1)
                 );
@@ -128,7 +144,10 @@ export default {
 
                 collector.on('collect', async (interaction) => {
                     if (interaction.user.id !== message.author.id) {
-                        return interaction.reply({ content: 'Akses ditolak.', ephemeral: true });
+                        return interaction.reply({
+                            content: t('common.access_denied'),
+                            ephemeral: true,
+                        });
                     }
 
                     if (interaction.customId === 'prev_paper') currentIdx--;
@@ -144,7 +163,7 @@ export default {
                     const disabledRow = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('done')
-                            .setLabel('Pencarian Selesai')
+                            .setLabel(t('commands.arxiv.finished'))
                             .setStyle(ButtonStyle.Secondary)
                             .setDisabled(true)
                     );
@@ -153,7 +172,7 @@ export default {
             }
         } catch (error) {
             Logger.error('ArXiv Error:', error.message);
-            loadingMsg.edit(`Gagal mengambil data: ${error.message}`);
+            loadingMsg.edit(t('common.error', { error: error.message }));
         }
     },
 };

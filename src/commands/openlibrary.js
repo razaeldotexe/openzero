@@ -5,19 +5,19 @@ import {
     ButtonStyle,
     ComponentType,
 } from 'discord.js';
+import { t } from '../utils/i18n.js';
+import Logger from '../utils/logger.js';
 
 export default {
     name: 'openlibrary',
-    description: 'Cari buku di Open Library',
+    description: t('commands.openlibrary.description'),
     async execute(message, args) {
         if (!args.length) {
-            return message.reply(
-                'Mohon berikan judul buku yang ingin dicari. Contoh: `!openlibrary The Lord of the Rings`'
-            );
+            return message.reply(t('commands.openlibrary.query_required'));
         }
 
         const query = args.join(' ');
-        const loadingMsg = await message.reply('Sedang mencari buku di Open Library...');
+        const loadingMsg = await message.reply(t('common.loading'));
 
         try {
             const searchUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10`;
@@ -25,14 +25,14 @@ export default {
 
             if (!response.ok) {
                 return loadingMsg.edit(
-                    `Gagal menghubungi Open Library (Status: ${response.status})`
+                    t('commands.openlibrary.api_error', { status: response.status })
                 );
             }
 
             const data = await response.json();
 
             if (!data.docs || data.docs.length === 0) {
-                return loadingMsg.edit(`Tidak ada buku yang ditemukan untuk "${query}".`);
+                return loadingMsg.edit(t('commands.openlibrary.no_results', { query }));
             }
 
             const books = data.docs;
@@ -42,25 +42,35 @@ export default {
                 const book = books[idx];
                 const author = book.author_name
                     ? book.author_name.join(', ')
-                    : 'Penulis Tidak Diketahui';
-                const firstPublish = book.first_publish_year || 'Tahun Tidak Diketahui';
+                    : t('commands.openlibrary.unknown_author');
+                const firstPublish =
+                    book.first_publish_year || t('commands.openlibrary.unknown_year');
                 const coverId = book.cover_i;
                 const olKey = book.key; // e.g. /works/OL27258W
 
                 const embed = new EmbedBuilder()
-                    .setColor('#20f0f2') // Warna tema buku
+                    .setColor('#20f0f2')
                     .setAuthor({
-                        name: `Diminta oleh ${message.author.username}`,
+                        name: t('commands.openlibrary.requested_by', {
+                            username: message.author.username,
+                        }),
                         iconURL: message.author.displayAvatarURL({ dynamic: true }),
                     })
                     .setTitle(book.title)
                     .setURL(`https://openlibrary.org${olKey}`)
                     .addFields(
-                        { name: 'Penulis', value: author, inline: true },
-                        { name: 'Terbit Pertama', value: String(firstPublish), inline: true }
+                        { name: t('commands.openlibrary.author'), value: author, inline: true },
+                        {
+                            name: t('commands.openlibrary.published'),
+                            value: String(firstPublish),
+                            inline: true,
+                        }
                     )
                     .setFooter({
-                        text: `Hasil ${idx + 1} dari ${books.length} | Open Library API`,
+                        text: t('commands.openlibrary.footer', {
+                            current: idx + 1,
+                            total: books.length,
+                        }),
                         iconURL:
                             'https://openlibrary.org/static/images/openlibrary-logo-tighter.svg',
                     })
@@ -72,7 +82,7 @@ export default {
 
                 if (book.subject) {
                     const subjects = book.subject.slice(0, 5).join(', ');
-                    embed.addFields({ name: 'Subjek', value: subjects });
+                    embed.addFields({ name: t('commands.openlibrary.subject'), value: subjects });
                 }
 
                 return embed;
@@ -82,12 +92,12 @@ export default {
                 return new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('prev_book')
-                        .setLabel('Sebelumnya')
+                        .setLabel(t('commands.openlibrary.prev'))
                         .setStyle(ButtonStyle.Danger)
                         .setDisabled(idx === 0),
                     new ButtonBuilder()
                         .setCustomId('next_book')
-                        .setLabel('Berikutnya')
+                        .setLabel(t('commands.openlibrary.next'))
                         .setStyle(ButtonStyle.Danger)
                         .setDisabled(idx === books.length - 1)
                 );
@@ -108,7 +118,10 @@ export default {
 
                 collector.on('collect', async (interaction) => {
                     if (interaction.user.id !== message.author.id) {
-                        return interaction.reply({ content: 'Akses ditolak.', ephemeral: true });
+                        return interaction.reply({
+                            content: t('common.access_denied'),
+                            ephemeral: true,
+                        });
                     }
 
                     if (interaction.customId === 'prev_book') currentIdx--;
@@ -124,7 +137,7 @@ export default {
                     const disabledRow = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('done')
-                            .setLabel('Pencarian Berakhir')
+                            .setLabel(t('commands.openlibrary.finished'))
                             .setStyle(ButtonStyle.Secondary)
                             .setDisabled(true)
                     );
@@ -132,8 +145,8 @@ export default {
                 });
             }
         } catch (error) {
-            console.error('OpenLibrary Error:', error);
-            loadingMsg.edit('Terjadi kesalahan saat mengambil data dari Open Library.');
+            Logger.error('OpenLibrary Error:', error);
+            loadingMsg.edit(t('common.error', { error: error.message }));
         }
     },
 };

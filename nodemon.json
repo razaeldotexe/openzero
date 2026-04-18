@@ -1,0 +1,3 @@
+{
+    "ignore": ["settings.json", "src/locales/*.json", ".git", "node_modules"]
+}

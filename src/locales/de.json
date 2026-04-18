@@ -1,0 +1,143 @@
+{
+    "common": {
+        "loading": "Verarbeitung...",
+        "error": "Ein Fehler ist aufgetreten: {error}",
+        "access_denied": "Zugriff verweigert.",
+        "query_required": "Bitte geben Sie ein Suchwort an."
+    },
+    "commands": {
+        "help": {
+            "name": "hilfe",
+            "description": "Zeigt eine Liste aller verfügbaren Befehle an",
+            "title": "Bot-Befehlshandbuch",
+            "desc_text": "Verwenden Sie das Präfix `!` vor der Eingabe eines Befehls.\nHier ist eine Liste der verfügbaren Funktionen:",
+            "footer": "Angefordert von {username}",
+            "alias": "Alias",
+            "no_desc": "Keine Beschreibung.",
+            "example": "Beispiel"
+        },
+        "ping": {
+            "name": "ping",
+            "description": "Bot-Reaktionsfähigkeit prüfen",
+            "reply": "Pong!"
+        },
+        "about": {
+            "name": "über",
+            "description": "Bot-Informationen",
+            "title": "Über OpenZero",
+            "desc": "OpenZero ist ein modularer Forschungsassistent.",
+            "field_research_title": "Forschung & Alphabetisierung",
+            "field_research_value": "Schneller Zugriff auf **arXiv** (wissenschaftliche Arbeiten), **Wikipedia** und **Open Library** (Bücher).",
+            "field_dev_title": "Entwickler-Tools",
+            "field_dev_value": "Suche und direkter Download von **Nerd Fonts** für die Terminal/IDE-Anpassung.",
+            "field_tech_title": "Technologie",
+            "field_tech_value": "Erstellt mit **Node.js (Discord.js v14)** und **Python** für die Datenverarbeitung.",
+            "footer": "OpenZero Projekt • Suche nach Open Data"
+        },
+        "language": {
+            "name": "sprache",
+            "description": "Bot-Sprache einstellen",
+            "current": "Aktuelle Sprache: **{lang}**",
+            "set_success": "Sprache erfolgreich geändert auf: **{lang}**",
+            "invalid": "Ungültige Sprache. Verwenden Sie `!language list`, um die Liste anzuzeigen.",
+            "auto_detecting": "Spracherkennung mittels KI...",
+            "auto_success": "Sprache erkannt und eingestellt auf: **{lang}**",
+            "auto_detected": "[KI] Oh! Das ist **{lang}**",
+            "list_title": "Liste der unterstützten Sprachen",
+            "set_prompt": "Bitte geben Sie einen Sprachnamen an. Beispiel: `!language set English (US)`",
+            "auto_prompt": "Bitte geben Sie einen Text zur Erkennung an. Beispiel: `!language auto Hello, how are you?`",
+            "usage_hint": "Verwenden Sie `!language set <Sprachname>`, `!language list` oder `!language auto <Text>`."
+        },
+        "wikipedia": {
+            "description": "Informationen auf Wikipedia mit einer coolen Oberfläche suchen",
+            "requested_by": "Angefordert von {username}",
+            "full_link": "Vollständiger Link",
+            "read_more": "Klicken Sie hier, um mehr zu lesen",
+            "footer": "Seite {current} von {total} • Wikipedia",
+            "prev": "Vorherige",
+            "next": "Nächste",
+            "finished": "Fertig"
+        },
+        "arxiv": {
+            "description": "Wissenschaftliche Arbeiten auf arXiv suchen",
+            "no_results": "Keine Arbeiten für \"{query}\" gefunden.",
+            "requested_by": "Angefordert von {username}",
+            "authors": "Autoren",
+            "published": "Veröffentlicht",
+            "category": "Kategorie",
+            "open_pdf": "PDF öffnen",
+            "footer": "Ergebnis {current} von {total} | arXiv API",
+            "prev": "Vorherige",
+            "next": "Nächste",
+            "finished": "Suche beendet"
+        },
+        "nerdfont": {
+            "description": "Nerd Fonts suchen und herunterladen",
+            "query_required": "Bitte geben Sie einen Schriftnamen zum Suchen an. Beispiel: `!nf jetbrains`.",
+            "no_results": "Keine Schriften für \"{query}\" gefunden.",
+            "font_family": "Schriftfamilie",
+            "folder_name": "Ordnername",
+            "download_link": "Download-Link",
+            "click_to_download": "Klicken Sie hier zum Herunterladen (.zip)",
+            "footer": "Ergebnis {current} von {total} • Nerd Fonts API",
+            "prev": "Vorherige",
+            "next": "Nächste",
+            "finished": "Suche beendet"
+        },
+        "openlibrary": {
+            "description": "Bücher in der Open Library suchen",
+            "query_required": "Bitte geben Sie einen Buchtitel zum Suchen an. Beispiel: `!openlibrary The Lord of the Rings`",
+            "api_error": "Fehler beim Kontaktieren der Open Library (Status: {status})",
+            "no_results": "Keine Bücher für \"{query}\" gefunden.",
+            "unknown_author": "Unbekannter Autor",
+            "unknown_year": "Unbekanntes Jahr",
+            "requested_by": "Angefordert von {username}",
+            "author": "Autor",
+            "published": "Erstveröffentlichung",
+            "subject": "Thema",
+            "footer": "Ergebnis {current} von {total} | Open Library API",
+            "prev": "Vorherige",
+            "next": "Nächste",
+            "finished": "Suche beendet"
+        },
+        "gettutorial": {
+            "description": "Tutorials aus dem GitHub Resource Repository mittels KI abrufen.",
+            "no_tutorials": "Derzeit sind keine Tutorials verfügbar.",
+            "ai_found": "Die KI hat das relevanteste Tutorial gefunden: **{file}**",
+            "no_relevant": "Entschuldigung, die KI hat kein relevantes Tutorial für die Anfrage gefunden: \"{query}\".",
+            "ai_limit": "Entschuldigung, das Bibliothekspersonal macht gerade Pause (KI-Limit).",
+            "no_found_repo": "Keine Tutorials im Repository gefunden.",
+            "showing": "Tutorial anzeigen: **{file}**",
+            "select_placeholder": "Tutorial auswählen...",
+            "choose_list": "Verwenden Sie `!tutorial <query>` für die KI-Suche oder wählen Sie aus der Liste:"
+        },
+        "full": {
+            "description": "Vollständiges Moderations-Kontrollzentrum (Kick, Ban, Clear, Info)",
+            "guide_title": "!full Befehlshandbuch",
+            "guide_desc": "Verwenden Sie diesen Befehl für schnelle Moderation.",
+            "info_desc": "Zeigt vollständige Benutzerinformationen an.",
+            "clear_desc": "Löscht eine bestimmte Anzahl von Nachrichten.",
+            "kick_desc": "Wirft ein Mitglied vom Server.",
+            "ban_desc": "Sperrt ein Mitglied vom Server.",
+            "unknown_sub": "Unbekannter Unterbefehl. Verwenden Sie `!full` für Hilfe.",
+            "no_roles": "Keine",
+            "user_info": "Benutzerinformationen: {tag}",
+            "user_id": "Benutzer-ID",
+            "nickname": "Spitzname",
+            "account_created": "Konto erstellt",
+            "joined_server": "Server beigetreten",
+            "clear_no_perms": "Sie benötigen die Berechtigung `Nachrichten verwalten`, um Nachrichten zu löschen.",
+            "clear_invalid": "Geben Sie einen Betrag zwischen 1 und 100 ein.",
+            "clear_success": "✅ {amount} Nachrichten erfolgreich gelöscht.",
+            "kick_no_perms": "Sie haben nicht die Berechtigung `Mitglieder kicken`.",
+            "kick_mention": "Erwähnen (@mention) Sie das Mitglied, das Sie kicken möchten.",
+            "kick_unable": "Ich kann dieses Mitglied nicht kicken.",
+            "no_reason": "Kein Grund angegeben.",
+            "kick_success": "👢 **{tag}** wurde gekickt. Grund: {reason}",
+            "ban_no_perms": "Sie haben nicht die Berechtigung `Mitglieder bannen`.",
+            "ban_mention": "Erwähnen (@mention) Sie das Mitglied, das Sie bannen möchten.",
+            "ban_unable": "Ich kann dieses Mitglied nicht bannen.",
+            "ban_success": "🔨 **{tag}** wurde permanent gesperrt. Grund: {reason}"
+        }
+    }
+}

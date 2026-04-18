@@ -83,7 +83,7 @@ client.on(Events.MessageCreate, async (message) => {
         await command.execute(message, args);
     } catch (error) {
         Logger.error(`Error executing ${commandName}:`, error);
-        message.reply('An error occurred while executing that command.');
+        message.reply(t('common.error', { error: error.message }));
     }
 });
 

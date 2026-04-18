@@ -35,7 +35,7 @@
             "invalid": "Bahasa tidak valid. Gunakan `!language list` untuk melihat daftar.",
             "auto_detecting": "Mendeteksi bahasa menggunakan AI...",
             "auto_success": "Bahasa terdeteksi dan diatur ke: **{lang}**",
-            "auto_detected": "Oh! Ini adalah **{lang}**",
+            "auto_detected": "[AI] Oh! Ini adalah **{lang}**",
             "list_title": "Daftar Bahasa yang Didukung"
         }
     }

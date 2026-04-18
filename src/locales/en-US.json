@@ -35,7 +35,7 @@
             "invalid": "Invalid language. Use `!language list` to see the list.",
             "auto_detecting": "Detecting language using AI...",
             "auto_success": "Language detected and set to: **{lang}**",
-            "auto_detected": "Oh! This is **{lang}**",
+            "auto_detected": "[AI] Oh! This is **{lang}**",
             "list_title": "List of Supported Languages"
         }
     }

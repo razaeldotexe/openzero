@@ -68,14 +68,11 @@ client.on(Events.MessageCreate, async (message) => {
     // Automatic Language Detection for input-based commands
     if (args.length > 0 && args.join(' ').length > 5) {
         try {
-            const currentLang = getLanguage();
             const detectedLang = await detectLanguageWithAI(args.join(' '), SUPPORTED_LANGUAGES);
 
-            if (detectedLang && detectedLang !== currentLang) {
+            if (detectedLang) {
                 setLanguage(detectedLang);
-                await message.channel.send(
-                    t('commands.language.auto_detected', { lang: detectedLang })
-                );
+                await message.channel.send(t('commands.language.auto_detected', { lang: detectedLang }));
             }
         } catch (error) {
             Logger.error('In-command language detection failed:', error);

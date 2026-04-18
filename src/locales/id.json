@@ -1,0 +1,42 @@
+{
+    "common": {
+        "loading": "Sedang diproses...",
+        "error": "Terjadi kesalahan: {error}",
+        "access_denied": "Anda tidak memiliki akses.",
+        "query_required": "Mohon berikan kata kunci pencarian."
+    },
+    "commands": {
+        "help": {
+            "name": "help",
+            "description": "Menampilkan daftar semua perintah yang tersedia",
+            "title": "Panduan Perintah Bot",
+            "desc_text": "Gunakan prefix `!` sebelum mengetik perintah.\nBerikut adalah daftar fitur yang tersedia:",
+            "footer": "Diminta oleh {username}",
+            "alias": "Alias",
+            "no_desc": "Tidak ada deskripsi.",
+            "example": "Contoh"
+        },
+        "ping": {
+            "name": "ping",
+            "description": "Cek responsivitas bot",
+            "reply": "Pong!"
+        },
+        "about": {
+            "name": "about",
+            "description": "Informasi bot",
+            "title": "Tentang OpenZero",
+            "desc": "OpenZero adalah asisten riset modular."
+        },
+        "language": {
+            "name": "language",
+            "description": "Atur bahasa bot",
+            "current": "Bahasa saat ini: **{lang}**",
+            "set_success": "Bahasa berhasil diubah ke: **{lang}**",
+            "invalid": "Bahasa tidak valid. Gunakan `!language list` untuk melihat daftar.",
+            "auto_detecting": "Mendeteksi bahasa menggunakan AI...",
+            "auto_success": "Bahasa terdeteksi dan diatur ke: **{lang}**",
+            "auto_detected": "Oh! Ini adalah **{lang}**",
+            "list_title": "Daftar Bahasa yang Didukung"
+        }
+    }
+}

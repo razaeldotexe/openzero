@@ -1,17 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
+import { t } from '../utils/i18n.js';
 
 export default {
     name: 'about',
-    description: 'Menampilkan informasi lengkap mengenai bot OpenZero',
+    description: t('commands.about.description'),
     async execute(message) {
         const embed = new EmbedBuilder()
             .setColor('#20f0f2')
-            .setTitle('Tentang OpenZero')
+            .setTitle(t('commands.about.title'))
             .setThumbnail(message.client.user.displayAvatarURL())
-            .setDescription(
-                '**OpenZero** adalah bot Discord modular yang dirancang untuk menjadi asisten riset dan pengembangan. ' +
-                    'Bot ini menghubungkan pengguna langsung ke berbagai sumber data terbuka (*Open Data*).'
-            )
+            .setDescription(t('commands.about.desc'))
             .addFields(
                 {
                     name: 'Riset & Literasi',

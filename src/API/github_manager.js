@@ -152,7 +152,7 @@ export async function fetchAllTutorialsRaw() {
     } catch (error) {
         if (error.cause && error.cause.code === 'ECONNREFUSED') {
             Logger.error('Flask API is not reachable. Is it running? URL:', apiUrl);
-            throw new Error('Could not connect to the tutorial API service.');
+            throw new Error('Could not connect to the tutorial API service.', { cause: error });
         }
         Logger.error('Error in fetchAllTutorialsRaw:', error.message);
         throw error;

@@ -1,24 +1,23 @@
 import { EmbedBuilder } from 'discord.js';
+import { t } from '../utils/i18n.js';
 
 export default {
     name: 'help',
     aliases: ['?'],
-    description: 'Menampilkan daftar semua perintah yang tersedia',
+    description: t('commands.help.description'),
     async execute(message) {
         const { commands } = message.client;
 
-        // Menggunakan Set untuk memastikan perintah unik (karena alias merujuk ke objek yang sama)
+        // Menggunakan Set untuk memastikan perintah unik
         const uniqueCommands = Array.from(new Set(commands.values()));
 
         const embed = new EmbedBuilder()
-            .setColor('#20f0f2') // Warna Hijau
-            .setTitle('Panduan Perintah Bot')
-            .setDescription(
-                'Gunakan prefix `!` sebelum mengetik perintah.\nBerikut adalah daftar fitur yang tersedia:'
-            )
+            .setColor('#20f0f2')
+            .setTitle(t('commands.help.title'))
+            .setDescription(t('commands.help.desc_text'))
             .setThumbnail(message.client.user.displayAvatarURL())
             .setFooter({
-                text: `Diminta oleh ${message.author.username}`,
+                text: t('commands.help.footer', { username: message.author.username }),
                 iconURL: message.author.displayAvatarURL({ dynamic: true }),
             })
             .setTimestamp();
@@ -26,9 +25,14 @@ export default {
         uniqueCommands.forEach((command) => {
             const name = command.name;
             const aliases = command.aliases
-                ? ` (Alias: ${command.aliases.map((a) => `!${a}`).join(', ')})`
+                ? ` (${t('commands.help.alias')}: ${command.aliases.map((a) => `!${a}`).join(', ')})`
                 : '';
-            const description = command.description || 'Tidak ada deskripsi.';
+
+            // Try to find localized description, fallback to command's static description
+            const description =
+                t(`commands.${name}.description`) ||
+                command.description ||
+                t('commands.help.no_desc');
 
             // Logika sederhana untuk menentukan contoh penggunaan
             let usage = `!${name}`;
@@ -38,7 +42,7 @@ export default {
 
             embed.addFields({
                 name: `!${name}${aliases}`,
-                value: `${description}\nContoh: \`${usage}\``,
+                value: `${description}\n${t('commands.help.example')}: \`${usage}\``,
                 inline: false,
             });
         });

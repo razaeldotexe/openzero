@@ -1,0 +1,42 @@
+{
+    "common": {
+        "loading": "Processing...",
+        "error": "An error occurred: {error}",
+        "access_denied": "Access denied.",
+        "query_required": "Please provide a search keyword."
+    },
+    "commands": {
+        "help": {
+            "name": "help",
+            "description": "Displays a list of all available commands",
+            "title": "Bot Command Guide",
+            "desc_text": "Use the `!` prefix before typing a command.\nHere is a list of available features:",
+            "footer": "Requested by {username}",
+            "alias": "Alias",
+            "no_desc": "No description.",
+            "example": "Example"
+        },
+        "ping": {
+            "name": "ping",
+            "description": "Check bot responsiveness",
+            "reply": "Pong!"
+        },
+        "about": {
+            "name": "about",
+            "description": "Bot information",
+            "title": "About OpenZero",
+            "desc": "OpenZero is a modular research assistant."
+        },
+        "language": {
+            "name": "language",
+            "description": "Set bot language",
+            "current": "Current language: **{lang}**",
+            "set_success": "Language successfully changed to: **{lang}**",
+            "invalid": "Invalid language. Use `!language list` to see the list.",
+            "auto_detecting": "Detecting language using AI...",
+            "auto_success": "Language detected and set to: **{lang}**",
+            "auto_detected": "Oh! This is **{lang}**",
+            "list_title": "List of Supported Languages"
+        }
+    }
+}

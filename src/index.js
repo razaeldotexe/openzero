@@ -4,6 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import Logger from './utils/logger.js';
+import { t, getLanguage, setLanguage } from './utils/i18n.js';
+import { detectLanguageWithAI } from './API/ai_manager.js';
+import { SUPPORTED_LANGUAGES } from './utils/languages.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,7 +50,7 @@ for (const file of commandFiles) {
 client.once(Events.ClientReady, (readyClient) => {
     Logger.info(`Bot is ready! Logged in as ${readyClient.user.tag}`);
 
-    readyClient.user.setActivity('!help | Searching Open Data', {
+    readyClient.user.setActivity(`!help | ${t('commands.help.description')}`, {
         type: ActivityType.Playing,
     });
 });
@@ -61,6 +64,23 @@ client.on(Events.MessageCreate, async (message) => {
     const command = client.commands.get(commandName);
 
     if (!command) return;
+
+    // Automatic Language Detection for input-based commands
+    if (args.length > 0 && args.join(' ').length > 5) {
+        try {
+            const currentLang = getLanguage();
+            const detectedLang = await detectLanguageWithAI(args.join(' '), SUPPORTED_LANGUAGES);
+
+            if (detectedLang && detectedLang !== currentLang) {
+                setLanguage(detectedLang);
+                await message.channel.send(
+                    t('commands.language.auto_detected', { lang: detectedLang })
+                );
+            }
+        } catch (error) {
+            Logger.error('In-command language detection failed:', error);
+        }
+    }
 
     try {
         await command.execute(message, args);

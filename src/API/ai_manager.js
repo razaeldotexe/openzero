@@ -78,6 +78,43 @@ ${fileContext}`;
     throw new Error('All providers reached their limits.');
 }
 
+/**
+ * Mendeteksi bahasa dari sebuah teks menggunakan AI.
+ * @param {string} text Teks yang akan dideteksi bahasanya.
+ * @param {string[]} supportedLanguages Daftar bahasa yang didukung.
+ * @returns {Promise<string|null>} Nama bahasa yang terdeteksi atau null.
+ */
+export async function detectLanguageWithAI(text, supportedLanguages) {
+    const prompt = `Text: "${text}"
+Based on the text above, identify which of the following languages it is written in. 
+Return ONLY the exact name of the language from the provided list. 
+If unsure, return "English (US)".
+
+List of Languages:
+${supportedLanguages.join(', ')}`;
+
+    // Fallback order: Gemini -> Groq -> OpenRouter
+    const providers = [
+        { name: 'Gemini', fn: tryGemini },
+        { name: 'Groq', fn: tryGroq },
+        { name: 'OpenRouter', fn: tryOpenRouter },
+    ];
+
+    for (const provider of providers) {
+        try {
+            Logger.info(`[AI Detection] Trying ${provider.name}...`);
+            const result = await provider.fn(prompt);
+            if (result && supportedLanguages.includes(result)) {
+                return result;
+            }
+        } catch (error) {
+            Logger.error(`[AI Detection] ${provider.name} failed:`, error.message);
+        }
+    }
+
+    return 'English (US)'; // Default fallback
+}
+
 async function tryGemini(prompt) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${config.geminiApiKey}`;
     const response = await fetch(url, {

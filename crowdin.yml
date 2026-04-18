@@ -1,0 +1,42 @@
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+base_path: "."
+base_url: "https://api.crowdin.com"
+
+preserve_hierarchy: true
+
+files:
+  - source: /src/locales/en-US.json
+    translation: /src/locales/%two_letters_code%.json
+    languages_mapping:
+      two_letters_code:
+        id: id
+        de: de
+        en-GB: en-GB
+        ja: ja
+        ko: ko
+        th: th
+        vi: vi
+        zh-CN: zh-CN
+        zh-TW: zh-TW
+        nl: nl
+        fr: fr
+        pt-BR: pt-BR
+        es-ES: es
+        es-419: es-419
+        sv-SE: sv
+        el: el
+        bg: bg
+        cs: cs
+        da: da
+        fi: fi
+        hu: hu
+        hr: hr
+        lt: lt
+        nb: nb
+        pl: pl
+        ro: ro
+        ru: ru
+        uk: uk
+        hi: hi
+        tr: tr

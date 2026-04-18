@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import Logger from './utils/logger.js';
-import { t, getLanguage, setLanguage } from './utils/i18n.js';
+import { t, setLanguage } from './utils/i18n.js';
 import { detectLanguageWithAI } from './API/ai_manager.js';
 import { SUPPORTED_LANGUAGES } from './utils/languages.js';
 

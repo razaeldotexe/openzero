@@ -1,26 +1,41 @@
 import { config } from '../config.js';
 import Logger from '../utils/logger.js';
 
+const GOOGLE_MODELS = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemma-4'];
+const GROQ_MODELS = [
+    'llama-3.3-70b-versatile',
+    'llama-3.1-8b-instant',
+    'mixtral-8x7b-32768',
+    'gemma2-9b-it',
+];
+const OPENROUTER_MODELS = [
+    'qwen/qwen-3.6-preview:free',
+    'meta-llama/llama-4-maverick:free',
+    'meta-llama/llama-4-scout:free',
+    'openrouter/hunter-alpha:free',
+    'openrouter/healer-alpha:free',
+];
+
 /**
  * Helper to handle AI fetch responses and check for JSON.
  */
-async function handleAIResponse(response, provider) {
+async function handleAIResponse(response, provider, model) {
     if (!response.ok) {
         const text = await response.text();
         Logger.error(
-            `AI Provider Error (${provider}): Status ${response.status}. Response: ${text.slice(0, 100)}...`
+            `AI Provider Error (${provider} - ${model}): Status ${response.status}. Response: ${text.slice(0, 100)}...`
         );
-        throw new Error(`AI Provider ${provider} returned an error: ${response.status}`);
+        throw new Error(`AI Provider ${provider} (${model}) returned an error: ${response.status}`);
     }
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
         const text = await response.text();
         Logger.error(
-            `AI Provider ${provider} expected JSON but got: ${contentType}. Content preview: ${text.slice(0, 100)}...`
+            `AI Provider ${provider} (${model}) expected JSON but got: ${contentType}. Content preview: ${text.slice(0, 100)}...`
         );
         throw new Error(
-            `AI Provider ${provider} returned HTML instead of JSON. This usually means a limit was hit or the service is down.`
+            `AI Provider ${provider} (${model}) returned HTML instead of JSON. This usually means a limit was hit or the service is down.`
         );
     }
 
@@ -154,49 +169,70 @@ export async function resolveLanguageNameWithAI(inputName, supportedLanguages) {
 }
 
 async function tryGemini(prompt) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${config.geminiApiKey}`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-        }),
-    });
+    for (const model of GOOGLE_MODELS) {
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.geminiApiKey}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                }),
+            });
 
-    const data = await handleAIResponse(response, 'Gemini');
-    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+            const data = await handleAIResponse(response, 'Gemini', model);
+            return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        } catch (err) {
+            Logger.warn(`Gemini model ${model} failed, trying next...`);
+        }
+    }
+    throw new Error('All Gemini models failed.');
 }
 
 async function tryGroq(prompt) {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${config.groqApiKey}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            model: 'llama-3.1-8b-instant',
-            messages: [{ role: 'user', content: prompt }],
-        }),
-    });
+    for (const model of GROQ_MODELS) {
+        try {
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${config.groqApiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: [{ role: 'user', content: prompt }],
+                }),
+            });
 
-    const data = await handleAIResponse(response, 'Groq');
-    return data.choices?.[0]?.message?.content?.trim();
+            const data = await handleAIResponse(response, 'Groq', model);
+            return data.choices?.[0]?.message?.content?.trim();
+        } catch (err) {
+            Logger.warn(`Groq model ${model} failed, trying next...`);
+        }
+    }
+    throw new Error('All Groq models failed.');
 }
 
 async function tryOpenRouter(prompt) {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${config.openrouterApiKey}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            model: 'meta-llama/llama-3.1-8b-instruct:free',
-            messages: [{ role: 'user', content: prompt }],
-        }),
-    });
+    for (const model of OPENROUTER_MODELS) {
+        try {
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${config.openrouterApiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: [{ role: 'user', content: prompt }],
+                }),
+            });
 
-    const data = await handleAIResponse(response, 'OpenRouter');
-    return data.choices?.[0]?.message?.content?.trim();
+            const data = await handleAIResponse(response, 'OpenRouter', model);
+            return data.choices?.[0]?.message?.content?.trim();
+        } catch (err) {
+            Logger.warn(`OpenRouter model ${model} failed, trying next...`);
+        }
+    }
+    throw new Error('All OpenRouter models failed.');
 }

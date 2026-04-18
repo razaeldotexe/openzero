@@ -1,0 +1,143 @@
+{
+    "common": {
+        "loading": "Processing...",
+        "error": "An error occurred: {error}",
+        "access_denied": "Access denied.",
+        "query_required": "Please provide a search keyword."
+    },
+    "commands": {
+        "help": {
+            "name": "help",
+            "description": "Displays a list of all available commands",
+            "title": "Bot Command Guide",
+            "desc_text": "Use the `!` prefix before typing a command.\nHere is a list of available features:",
+            "footer": "Requested by {username}",
+            "alias": "Alias",
+            "no_desc": "No description.",
+            "example": "Example"
+        },
+        "ping": {
+            "name": "ping",
+            "description": "Check bot responsiveness",
+            "reply": "Pong!"
+        },
+        "about": {
+            "name": "about",
+            "description": "Bot information",
+            "title": "About OpenZero",
+            "desc": "OpenZero is a modular research assistant.",
+            "field_research_title": "Research & Literacy",
+            "field_research_value": "Quick access to **arXiv** (scientific papers), **Wikipedia**, and **Open Library** (books).",
+            "field_dev_title": "Developer Tools",
+            "field_dev_value": "Search and direct download of **Nerd Fonts** for terminal/IDE customization.",
+            "field_tech_title": "Technology",
+            "field_tech_value": "Built with **Node.js (Discord.js v14)** and **Python** for data processing.",
+            "footer": "OpenZero Project • Searching Open Data"
+        },
+        "language": {
+            "name": "language",
+            "description": "Set bot language",
+            "current": "Current language: **{lang}**",
+            "set_success": "Language successfully changed to: **{lang}**",
+            "invalid": "Invalid language. Use `!language list` to see the list.",
+            "auto_detecting": "Detecting language using AI...",
+            "auto_success": "Language detected and set to: **{lang}**",
+            "auto_detected": "[AI] Oh! This is **{lang}**",
+            "list_title": "List of Supported Languages",
+            "set_prompt": "Please provide a language name. Example: `!language set English (US)`",
+            "auto_prompt": "Please provide text to detect. Example: `!language auto Hello, how are you?`",
+            "usage_hint": "Use `!language set <language name>`, `!language list`, or `!language auto <text>`."
+        },
+        "wikipedia": {
+            "description": "Search for information on Wikipedia with a cool interface",
+            "requested_by": "Requested by {username}",
+            "full_link": "Full Link",
+            "read_more": "Click here to read more",
+            "footer": "Page {current} of {total} • Wikipedia",
+            "prev": "Previous",
+            "next": "Next",
+            "finished": "Finished"
+        },
+        "arxiv": {
+            "description": "Search for scientific papers on arXiv",
+            "no_results": "No papers found for \"{query}\".",
+            "requested_by": "Requested by {username}",
+            "authors": "Authors",
+            "published": "Published",
+            "category": "Category",
+            "open_pdf": "Open PDF",
+            "footer": "Result {current} of {total} | arXiv API",
+            "prev": "Previous",
+            "next": "Next",
+            "finished": "Search Finished"
+        },
+        "nerdfont": {
+            "description": "Search and download Nerd Fonts",
+            "query_required": "Please provide a font name to search. Example: `!nf jetbrains`.",
+            "no_results": "No fonts found for \"{query}\".",
+            "font_family": "Font Family",
+            "folder_name": "Folder Name",
+            "download_link": "Download Link",
+            "click_to_download": "Click here to Download (.zip)",
+            "footer": "Result {current} of {total} • Nerd Fonts API",
+            "prev": "Previous",
+            "next": "Next",
+            "finished": "Search Finished"
+        },
+        "openlibrary": {
+            "description": "Search for books on Open Library",
+            "query_required": "Please provide a book title to search. Example: `!openlibrary The Lord of the Rings`",
+            "api_error": "Failed to contact Open Library (Status: {status})",
+            "no_results": "No books found for \"{query}\".",
+            "unknown_author": "Unknown Author",
+            "unknown_year": "Unknown Year",
+            "requested_by": "Requested by {username}",
+            "author": "Author",
+            "published": "First Published",
+            "subject": "Subject",
+            "footer": "Result {current} of {total} | Open Library API",
+            "prev": "Previous",
+            "next": "Next",
+            "finished": "Search Ended"
+        },
+        "gettutorial": {
+            "description": "Get tutorials from GitHub Resource repository using AI.",
+            "no_tutorials": "No tutorials available at this time.",
+            "ai_found": "AI found the most relevant tutorial: **{file}**",
+            "no_relevant": "Sorry, AI found no relevant tutorial for query: \"{query}\".",
+            "ai_limit": "Sorry, the library staff are currently on break (AI Limit).",
+            "no_found_repo": "No tutorials found in the repository.",
+            "showing": "Showing tutorial: **{file}**",
+            "select_placeholder": "Select tutorial...",
+            "choose_list": "Use `!tutorial <query>` for AI search, or choose from the list:"
+        },
+        "full": {
+            "description": "Complete moderation control center (Kick, Ban, Clear, Info)",
+            "guide_title": "!full Command Guide",
+            "guide_desc": "Use this command for quick moderation.",
+            "info_desc": "Displays complete user information.",
+            "clear_desc": "Deletes a specified number of messages.",
+            "kick_desc": "Kicks a member from the server.",
+            "ban_desc": "Bans a member from the server.",
+            "unknown_sub": "Unknown sub-command. Use `!full` for help.",
+            "no_roles": "None",
+            "user_info": "User Information: {tag}",
+            "user_id": "User ID",
+            "nickname": "Nickname",
+            "account_created": "Account Created",
+            "joined_server": "Joined Server",
+            "clear_no_perms": "You need `Manage Messages` permission to delete messages.",
+            "clear_invalid": "Enter an amount between 1 and 100.",
+            "clear_success": "✅ Successfully deleted {amount} messages.",
+            "kick_no_perms": "You do not have `Kick Members` permission.",
+            "kick_mention": "Mention (@mention) the member you want to kick.",
+            "kick_unable": "I cannot kick this member.",
+            "no_reason": "No reason provided.",
+            "kick_success": "👢 **{tag}** has been kicked. Reason: {reason}",
+            "ban_no_perms": "You do not have `Ban Members` permission.",
+            "ban_mention": "Mention (@mention) the member you want to ban.",
+            "ban_unable": "I cannot ban this member.",
+            "ban_success": "🔨 **{tag}** has been permanently banned. Reason: {reason}"
+        }
+    }
+}

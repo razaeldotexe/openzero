@@ -156,6 +156,17 @@
             "close_btn": "Close Ticket",
             "closing": "Closing ticket...",
             "no_perms_setup": "You need `Administrator` permission to setup the ticket system."
+        },
+        "webhook": {
+            "description": "Create a Discord Webhook easily",
+            "usage": "Usage: `!webhook <name> <#channel> <avatar_url>`",
+            "invalid_channel": "Please mention a valid text channel.",
+            "invalid_url": "Please provide a valid image URL for the profile picture.",
+            "success_title": "Webhook Created Successfully",
+            "field_name": "Name",
+            "field_channel": "Channel",
+            "field_url": "Webhook URL",
+            "footer": "Keep this URL private!"
         }
     }
 }

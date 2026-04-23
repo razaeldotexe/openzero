@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { OpenZeroEmbed } from '../utils/embed.js';
 import { config } from '../config.js';
 import { APIClient } from './api_client.js';
 import Logger from '../utils/logger.js';
@@ -37,11 +37,9 @@ function processMarkdownToEmbeds(content, fileName) {
     let chunkIndex = 1;
 
     const createBaseEmbed = (idx) => {
-        const embed = new EmbedBuilder()
+        const embed = new OpenZeroEmbed()
             .setTitle(idx === 1 ? title : `${title} (Bagian ${idx})`)
-            .setColor('#20f0f2') // Consistent with project brand
-            .setFooter({ text: footerText })
-            .setTimestamp();
+            .setFooter({ text: footerText });
 
         if (idx === 1) {
             embed.setAuthor({

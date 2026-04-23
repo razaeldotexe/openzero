@@ -1,11 +1,11 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
 } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import Logger from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
@@ -60,8 +60,7 @@ export default {
 
             const createEmbed = async (idx) => {
                 const font = fonts[idx];
-                return new EmbedBuilder()
-                    .setColor('#20f0f2')
+                return new OpenZeroEmbed({}, context)
                     .setTitle(font.patchedName)
                     .setDescription(
                         `${await t('commands.nerdfont.font_family', {}, guildId)}: **${font.unpatchedName}**`
@@ -87,8 +86,7 @@ export default {
                             },
                             guildId
                         ),
-                    })
-                    .setTimestamp();
+                    });
             };
 
             const createButtons = async (idx) => {

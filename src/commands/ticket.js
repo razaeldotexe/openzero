@@ -1,11 +1,11 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     PermissionsBitField,
 } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { t } from '../utils/i18n.js';
 
 export default {
@@ -17,11 +17,9 @@ export default {
             return context.reply({ content: noPerms, ephemeral: true });
         }
 
-        const embed = new EmbedBuilder()
-            .setColor('#20f0f2')
+        const embed = new OpenZeroEmbed({}, context)
             .setTitle(await t('commands.ticket.setup_title', {}, guildId))
-            .setDescription(await t('commands.ticket.setup_desc', {}, guildId))
-            .setTimestamp();
+            .setDescription(await t('commands.ticket.setup_desc', {}, guildId));
 
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()

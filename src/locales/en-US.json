@@ -264,21 +264,6 @@
             "condition_label": "Condition",
             "max_label": "Max",
             "min_label": "Min"
-        },
-        "gif": {
-            "name": "gif",
-            "description": "Search for AI-optimized GIFs or see trending ones",
-            "query_required": "Please provide a search keyword for the GIF.",
-            "searching": "Optimizing search with AI and fetching GIF...",
-            "no_results": "No GIFs found for \"{query}\".",
-            "api_error": "Failed to fetch GIF from the server.",
-            "requested_by": "Requested by {username}",
-            "footer": "AI-powered GIF Search",
-            "trending_title": "Trending GIFs",
-            "trending_footer": "Trending GIF {current} of {total}",
-            "prev": "Previous",
-            "next": "Next",
-            "finished": "Finished"
         }
     }
 }

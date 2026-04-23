@@ -1,10 +1,5 @@
-import {
-    SlashCommandBuilder,
-    EmbedBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-} from 'discord.js';
+import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import { t } from '../utils/i18n.js';
 import Logger from '../utils/logger.js';
@@ -55,11 +50,9 @@ export default {
                 return await editResponse({ content: noResults });
             }
 
-            const embed = new EmbedBuilder()
-                .setColor('#20f0f2')
+            const embed = new OpenZeroEmbed({}, context)
                 .setTitle(`🛍️ AI Product Search: ${query}`)
-                .setFooter({ text: await t('commands.product.footer', {}, guildId) })
-                .setTimestamp();
+                .setFooter({ text: await t('commands.product.footer', {}, guildId) });
 
             const priceLabel = await t('commands.product.price', {}, guildId);
             const actionRow = new ActionRowBuilder();

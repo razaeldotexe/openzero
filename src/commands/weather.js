@@ -1,11 +1,11 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
 } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import Logger from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
@@ -79,8 +79,7 @@ export default {
             };
 
             const createCurrentEmbed = async () => {
-                return new EmbedBuilder()
-                    .setColor('#00AAFF')
+                return new OpenZeroEmbed({}, context)
                     .setAuthor({
                         name: user.username,
                         iconURL: user.displayAvatarURL({ dynamic: true }),
@@ -114,8 +113,7 @@ export default {
                             inline: true,
                         }
                     )
-                    .setFooter({ text: await t('commands.weather.footer', {}, guildId) })
-                    .setTimestamp();
+                    .setFooter({ text: await t('commands.weather.footer', {}, guildId) });
             };
 
             const createDailyEmbed = async () => {
@@ -123,11 +121,9 @@ export default {
                 const maxLabel = await t('commands.weather.max_label', {}, guildId);
                 const minLabel = await t('commands.weather.min_label', {}, guildId);
 
-                const embed = new EmbedBuilder()
-                    .setColor('#00AAFF')
+                const embed = new OpenZeroEmbed({}, context)
                     .setTitle(`${title} - ${data.location.name}`)
-                    .setFooter({ text: await t('commands.weather.footer', {}, guildId) })
-                    .setTimestamp();
+                    .setFooter({ text: await t('commands.weather.footer', {}, guildId) });
 
                 data.daily.forEach((day) => {
                     embed.addFields({
@@ -141,11 +137,9 @@ export default {
 
             const createHourlyEmbed = async () => {
                 const title = await t('commands.weather.hourly_forecast', {}, guildId);
-                const embed = new EmbedBuilder()
-                    .setColor('#00AAFF')
+                const embed = new OpenZeroEmbed({}, context)
                     .setTitle(`${title} - ${data.location.name}`)
-                    .setFooter({ text: await t('commands.weather.footer', {}, guildId) })
-                    .setTimestamp();
+                    .setFooter({ text: await t('commands.weather.footer', {}, guildId) });
 
                 data.hourly.slice(0, 9).forEach((hour) => {
                     const time = hour.time.includes('T') ? hour.time.split('T')[1] : hour.time;

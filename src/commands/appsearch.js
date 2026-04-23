@@ -1,11 +1,11 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
 } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import Logger from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
@@ -89,7 +89,7 @@ export default {
 
             const createEmbed = async (idx) => {
                 const app = apps[idx];
-                const embed = new EmbedBuilder()
+                const embed = new OpenZeroEmbed({}, context)
                     .setColor('#20f0f2')
                     .setAuthor({
                         name: await t(
@@ -117,8 +117,7 @@ export default {
                             },
                             guildId
                         ),
-                    })
-                    .setTimestamp();
+                    });
 
                 if (app.summary) {
                     embed.setDescription(

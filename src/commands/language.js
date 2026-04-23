@@ -1,4 +1,5 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { SUPPORTED_LANGUAGES } from '../utils/languages.js';
 import { getLanguage, setLanguage, t } from '../utils/i18n.js';
 import { detectLanguageWithAI, resolveLanguageNameWithAI } from '../API/ai_manager.js';
@@ -50,11 +51,9 @@ export default {
         }
 
         if (subCommand === 'list') {
-            const embed = new EmbedBuilder()
-                .setColor('#20f0f2')
+            const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('commands.language.list_title', {}, guildId))
-                .setDescription(SUPPORTED_LANGUAGES.join(', '))
-                .setTimestamp();
+                .setDescription(SUPPORTED_LANGUAGES.join(', '));
             return context.reply({ embeds: [embed] });
         }
 

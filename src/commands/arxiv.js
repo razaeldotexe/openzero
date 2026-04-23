@@ -1,11 +1,11 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
 } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import Logger from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
@@ -67,7 +67,7 @@ export default {
                         ? paper.summary.slice(0, 800) + '...'
                         : paper.summary;
 
-                return new EmbedBuilder()
+                return new OpenZeroEmbed({}, context)
                     .setColor('#20f0f2')
                     .setAuthor({
                         name: await t(
@@ -114,8 +114,7 @@ export default {
                         ),
                         iconURL:
                             'https://static.arxiv.org/static/browse/0.3.4/images/icons/apple-touch-icon.png',
-                    })
-                    .setTimestamp();
+                    });
             };
 
             const createButtons = async (idx) => {

@@ -1,4 +1,5 @@
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { t } from '../utils/i18n.js';
 import { config } from '../config.js';
 
@@ -14,7 +15,7 @@ export default {
         // Ensure unique commands
         const uniqueCommands = Array.from(new Set(commands.values()));
 
-        const embed = new EmbedBuilder()
+        const embed = new OpenZeroEmbed({}, context)
             .setColor('#20f0f2')
             .setTitle(await t('commands.help.title', {}, guildId))
             .setDescription(await t('commands.help.desc_text', {}, guildId))
@@ -22,8 +23,7 @@ export default {
             .setFooter({
                 text: await t('commands.help.footer', { username: user.username }, guildId),
                 iconURL: user.displayAvatarURL({ dynamic: true }),
-            })
-            .setTimestamp();
+            });
 
         for (const command of uniqueCommands) {
             const name = command.data?.name || command.name;

@@ -1,11 +1,11 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
 } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import Logger from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
@@ -62,8 +62,7 @@ export default {
             let currentPage = 0;
 
             const createEmbed = async (pageIndex) => {
-                const embed = new EmbedBuilder()
-                    .setColor('#20f0f2')
+                const embed = new OpenZeroEmbed({}, context)
                     .setAuthor({
                         name: await t(
                             'commands.wikipedia.requested_by',
@@ -96,8 +95,7 @@ export default {
                         ),
                         iconURL:
                             'https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png',
-                    })
-                    .setTimestamp();
+                    });
 
                 return embed;
             };

@@ -1,11 +1,11 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
 } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { t } from '../utils/i18n.js';
 import Logger from '../utils/logger.js';
 
@@ -74,8 +74,7 @@ export default {
                 const coverId = book.cover_i;
                 const olKey = book.key;
 
-                const embed = new EmbedBuilder()
-                    .setColor('#20f0f2')
+                const embed = new OpenZeroEmbed({}, context)
                     .setAuthor({
                         name: await t(
                             'commands.openlibrary.requested_by',
@@ -111,8 +110,7 @@ export default {
                         ),
                         iconURL:
                             'https://openlibrary.org/static/images/openlibrary-logo-tighter.svg',
-                    })
-                    .setTimestamp();
+                    });
 
                 if (coverId) {
                     embed.setThumbnail(`https://covers.openlibrary.org/b/id/${coverId}-M.jpg`);

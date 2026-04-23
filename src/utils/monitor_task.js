@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { OpenZeroEmbed } from './embed.js';
 import { APIClient } from '../API/api_client.js';
 import { getMonitors, deleteMonitor } from './database.js';
 import { t } from './i18n.js';
@@ -53,11 +53,9 @@ export async function updateMonitors(client) {
             if (!Array.isArray(apps) || apps.length === 0) continue;
 
             const guildId = monitor.guildId;
-            const embed = new EmbedBuilder()
-                .setColor('#20f0f2')
+            const embed = new OpenZeroEmbed()
                 .setTitle(`📈 Trending Apps: ${monitor.source.toUpperCase()}`)
                 .setDescription(await t('commands.monitorapps.embed_desc', {}, guildId))
-                .setTimestamp()
                 .setFooter({ text: await t('commands.monitorapps.last_updated', {}, guildId) });
 
             const visitPageLabel = await t('commands.appsearch.visit_page', {}, guildId);

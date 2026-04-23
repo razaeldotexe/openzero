@@ -1,4 +1,5 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { t } from '../utils/i18n.js';
 
 export default {
@@ -33,7 +34,7 @@ export default {
                 .map((role) => role.toString())
                 .join(', ') || (await t('commands.info.no_roles', {}, guildId));
 
-        const embed = new EmbedBuilder()
+        const embed = new OpenZeroEmbed({}, context)
             .setColor('#20f0f2')
             .setTitle(await t('commands.info.user_info', { tag: target.user.tag }, guildId))
             .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
@@ -59,8 +60,7 @@ export default {
                     inline: true,
                 },
                 { name: `Roles [${target.roles.cache.size - 1}]`, value: roles }
-            )
-            .setTimestamp();
+            );
 
         return context.reply({ embeds: [embed] });
     },

@@ -1,4 +1,5 @@
-import { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, ChannelType } from 'discord.js';
+import { SlashCommandBuilder, PermissionsBitField, ChannelType } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { t } from '../utils/i18n.js';
 import Logger from '../utils/logger.js';
 
@@ -45,15 +46,13 @@ export default {
         } else {
             // Show usage if no args or incomplete
             if (args.length < 3) {
-                const helpEmbed = new EmbedBuilder()
-                    .setColor('#20f0f2')
+                const helpEmbed = new OpenZeroEmbed({}, context)
                     .setTitle('Webhook Command')
                     .setDescription(await t('commands.webhook.usage', {}, guildId))
                     .addFields({
                         name: 'Example',
                         value: '`!webhook OpenZero Assistant #general https://example.com/image.png`',
-                    })
-                    .setTimestamp();
+                    });
                 return context.reply({ embeds: [helpEmbed] });
             }
 
@@ -108,7 +107,7 @@ export default {
                 reason: `Created by ${user.tag} via OpenZero`,
             });
 
-            const successEmbed = new EmbedBuilder()
+            const successEmbed = new OpenZeroEmbed({}, context)
                 .setColor('#2dba4e')
                 .setTitle(await t('commands.webhook.success_title', {}, guildId))
                 .setThumbnail(avatarUrl)
@@ -128,8 +127,7 @@ export default {
                         value: `||${webhook.url}||`,
                     }
                 )
-                .setFooter({ text: await t('commands.webhook.footer', {}, guildId) })
-                .setTimestamp();
+                .setFooter({ text: await t('commands.webhook.footer', {}, guildId) });
 
             await editResponse({ content: null, embeds: [successEmbed] });
         } catch (error) {

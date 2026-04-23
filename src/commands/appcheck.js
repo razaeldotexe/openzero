@@ -1,4 +1,5 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import Logger from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
@@ -72,7 +73,7 @@ export default {
                 }
             });
 
-            const embed = new EmbedBuilder()
+            const embed = new OpenZeroEmbed({}, context)
                 .setColor('#FF0055')
                 .setAuthor({
                     name: await t(
@@ -84,8 +85,7 @@ export default {
                 })
                 .setTitle(
                     await t('commands.appcheck.availability_for', { app: data.app_name }, guildId)
-                )
-                .setTimestamp();
+                );
 
             // Add Fields by Category
             if (categories['Mobile'].length > 0) {

@@ -1,4 +1,5 @@
-import { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
+import OpenZeroEmbed from '../utils/embed.js';
 import { APIClient } from '../API/api_client.js';
 import { saveMonitor, deleteMonitor } from '../utils/database.js';
 import { t } from '../utils/i18n.js';
@@ -70,11 +71,9 @@ export default {
                 return isInteraction ? context.editReply(noResults) : context.reply(noResults);
             }
 
-            const embed = new EmbedBuilder()
-                .setColor('#20f0f2')
+            const embed = new OpenZeroEmbed({}, context)
                 .setTitle(`📈 Trending Apps: ${source.toUpperCase()}`)
                 .setDescription(await t('commands.monitorapps.embed_desc', {}, guildId))
-                .setTimestamp()
                 .setFooter({ text: await t('commands.monitorapps.last_updated', {}, guildId) });
 
             const visitPageLabel = await t('commands.appsearch.visit_page', {}, guildId);

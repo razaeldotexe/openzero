@@ -87,7 +87,6 @@ export default {
             const createEmbed = async (idx) => {
                 const item = results[idx];
                 const embed = new OpenZeroEmbed({}, context)
-                    .setColor('#20f0f2')
                     .setAuthor({
                         name: await t(
                             'commands.fda.requested_by',

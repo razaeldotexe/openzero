@@ -74,7 +74,6 @@ export default {
             });
 
             const embed = new OpenZeroEmbed({}, context)
-                .setColor('#FF0055')
                 .setAuthor({
                     name: await t(
                         'commands.appcheck.requested_by',

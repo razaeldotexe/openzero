@@ -90,7 +90,6 @@ export default {
             const createEmbed = async (idx) => {
                 const app = apps[idx];
                 const embed = new OpenZeroEmbed({}, context)
-                    .setColor('#20f0f2')
                     .setAuthor({
                         name: await t(
                             'commands.appsearch.requested_by',

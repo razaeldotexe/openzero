@@ -108,7 +108,6 @@ export default {
             });
 
             const successEmbed = new OpenZeroEmbed({}, context)
-                .setColor('#2dba4e')
                 .setTitle(await t('commands.webhook.success_title', {}, guildId))
                 .setThumbnail(avatarUrl)
                 .addFields(

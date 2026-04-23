@@ -8,7 +8,6 @@ export default {
     async execute(context) {
         const guildId = context.guild?.id;
         const embed = new OpenZeroEmbed()
-            .setColor('#20f0f2')
             .setTitle(await t('commands.about.title', {}, guildId))
             .setThumbnail(context.client.user.displayAvatarURL())
             .setDescription(await t('commands.about.desc', {}, guildId))

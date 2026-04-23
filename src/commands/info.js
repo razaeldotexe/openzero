@@ -35,7 +35,6 @@ export default {
                 .join(', ') || (await t('commands.info.no_roles', {}, guildId));
 
         const embed = new OpenZeroEmbed({}, context)
-            .setColor('#20f0f2')
             .setTitle(await t('commands.info.user_info', { tag: target.user.tag }, guildId))
             .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
             .addFields(

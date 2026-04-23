@@ -16,7 +16,6 @@ export default {
         const uniqueCommands = Array.from(new Set(commands.values()));
 
         const embed = new OpenZeroEmbed({}, context)
-            .setColor('#20f0f2')
             .setTitle(await t('commands.help.title', {}, guildId))
             .setDescription(await t('commands.help.desc_text', {}, guildId))
             .setThumbnail(context.client.user.displayAvatarURL())

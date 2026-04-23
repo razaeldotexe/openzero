@@ -68,7 +68,6 @@ export default {
                         : paper.summary;
 
                 return new OpenZeroEmbed({}, context)
-                    .setColor('#20f0f2')
                     .setAuthor({
                         name: await t(
                             'commands.arxiv.requested_by',

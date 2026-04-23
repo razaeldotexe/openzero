@@ -1,0 +1,125 @@
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { APIClient } from '../API/api_client.js';
+import Logger from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
+
+export default {
+    data: new SlashCommandBuilder()
+        .setName('appcheck')
+        .setDescription('Check if an app or game is available on Mobile, PC, or Console')
+        .addStringOption((option) =>
+            option
+                .setName('query')
+                .setDescription('App name or Store URL (Play Store, App Store, etc.)')
+                .setRequired(true)
+        ),
+    async execute(context, args) {
+        const guildId = context.guild?.id;
+        const isInteraction = context.isChatInputCommand?.();
+        const user = isInteraction ? context.user : context.author;
+
+        let query;
+        if (isInteraction) {
+            query = context.options.getString('query');
+        } else {
+            query = args.join(' ');
+        }
+
+        if (!query) {
+            const queryReq = await t('commands.appcheck.query_required', {}, guildId);
+            return context.reply(queryReq);
+        }
+
+        let loadingMsg;
+        if (isInteraction) {
+            await context.deferReply();
+        } else {
+            loadingMsg = await context.reply(await t('commands.appcheck.searching', {}, guildId));
+        }
+
+        const editResponse = async (options) => {
+            if (isInteraction) return await context.editReply(options);
+            if (loadingMsg) return await loadingMsg.edit(options);
+            return await context.reply(options);
+        };
+
+        try {
+            const data = await APIClient.post('/ai/app-availability', {
+                query: query,
+            });
+
+            if (data.error) {
+                return await editResponse({ content: data.error });
+            }
+
+            if (!data.platforms || data.platforms.length === 0) {
+                const noResults = await t('commands.appcheck.no_results', { query }, guildId);
+                return await editResponse({ content: noResults });
+            }
+
+            const categories = {
+                Mobile: [],
+                PC: [],
+                Console: [],
+            };
+
+            data.platforms.forEach((p) => {
+                const cat = p.category || 'Mobile';
+                if (categories[cat]) {
+                    categories[cat].push(p);
+                } else {
+                    categories['Mobile'].push(p);
+                }
+            });
+
+            const embed = new EmbedBuilder()
+                .setColor('#FF0055')
+                .setAuthor({
+                    name: await t(
+                        'commands.appcheck.requested_by',
+                        { username: user.username },
+                        guildId
+                    ),
+                    iconURL: user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTitle(
+                    await t('commands.appcheck.availability_for', { app: data.app_name }, guildId)
+                )
+                .setTimestamp();
+
+            // Add Fields by Category
+            if (categories['Mobile'].length > 0) {
+                embed.addFields({
+                    name: await t('commands.appcheck.category_mobile', {}, guildId),
+                    value: categories['Mobile']
+                        .map((p) => `> • **${p.name}**: [Link](${p.url})`)
+                        .join('\n'),
+                });
+            }
+
+            if (categories['PC'].length > 0) {
+                embed.addFields({
+                    name: await t('commands.appcheck.category_pc', {}, guildId),
+                    value: categories['PC']
+                        .map((p) => `> • **${p.name}**: [Link](${p.url})`)
+                        .join('\n'),
+                });
+            }
+
+            if (categories['Console'].length > 0) {
+                embed.addFields({
+                    name: await t('commands.appcheck.category_console', {}, guildId),
+                    value: categories['Console']
+                        .map((p) => `> • **${p.name}**: [Link](${p.url})`)
+                        .join('\n'),
+                });
+            }
+
+            await editResponse({ content: null, embeds: [embed] });
+        } catch (error) {
+            Logger.error('AppCheck Error:', error.message);
+            const errorText = await t('common.error', { error: error.message }, guildId);
+            await editResponse({ content: errorText });
+        }
+    },
+};

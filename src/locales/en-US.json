@@ -21,18 +21,17 @@
             "next": "Next",
             "finished": "Search Finished"
         },
-        "appstore": {
-            "name": "appstore",
-            "description": "Search for apps on the Apple App Store",
-            "query_required": "Please provide an app name to search for.",
-            "no_results": "No apps found for \"{query}\" on the App Store.",
-            "requested_by": "Requested by {username}",
-            "source_label": "Source",
-            "visit_page": "Visit Page",
-            "footer": "Result {current} of {total}",
-            "prev": "Previous",
-            "next": "Next",
-            "finished": "Search Finished"
+        "appcheck": {
+            "name": "appcheck",
+            "description": "Check if an app or game is available on Mobile, PC, or Console",
+            "query_required": "Please provide a name or Store URL.",
+            "searching": "🔍 Scanning major storefronts across PC, Mobile, and Console...",
+            "no_results": "No official store links found for \"{query}\".",
+            "requested_by": "Availability Check by {username}",
+            "availability_for": "Availability for **{app}**",
+            "category_mobile": "📱 **Mobile**",
+            "category_pc": "💻 **PC**",
+            "category_console": "🎮 **Console**"
         },
         "monitorapps": {
             "name": "monitorapps",

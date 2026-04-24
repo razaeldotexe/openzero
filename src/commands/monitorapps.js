@@ -74,8 +74,7 @@ export default {
                 );
                 const embed = new OpenZeroEmbed({}, context)
                     .setTitle(await t('common.error_title', {}, guildId))
-                    .setDescription(noResults)
-                    .setColor('#ff0000');
+                    .setDescription(noResults);
                 return isInteraction
                     ? context.editReply({ embeds: [embed] })
                     : context.reply({ embeds: [embed] });
@@ -124,8 +123,7 @@ export default {
             const errorMsg = await t('common.error', { error: error.message }, guildId);
             const errorEmbed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(errorMsg)
-                .setColor('#ff0000');
+                .setDescription(errorMsg);
             if (isInteraction) {
                 await context.editReply({ embeds: [errorEmbed] });
             } else {

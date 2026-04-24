@@ -53,8 +53,7 @@ export default {
             const errorMsg = await t('commands.outfit.image_required', {}, guildId);
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(errorMsg)
-                .setColor('#ff0000');
+                .setDescription(errorMsg);
             return context.reply({ embeds: [embed] });
         }
 
@@ -82,8 +81,7 @@ export default {
             if (data.error || data.detail) {
                 const embed = new OpenZeroEmbed({}, context)
                     .setTitle(await t('common.error_title', {}, guildId))
-                    .setDescription(data.error || data.detail)
-                    .setColor('#ff0000');
+                    .setDescription(data.error || data.detail);
                 return await editResponse({ embeds: [embed] });
             }
 
@@ -107,19 +105,13 @@ export default {
                     text: await t('commands.outfit.footer', {}, guildId),
                 });
 
-            // Set color based on score
-            if (data.score >= 8) embed.setColor('#00ff00');
-            else if (data.score >= 5) embed.setColor('#ffff00');
-            else embed.setColor('#ff0000');
-
             await editResponse({ content: null, embeds: [embed] });
         } catch (error) {
             Logger.error('Outfit Rating Error:', error.message);
             const errorText = await t('common.error', { error: error.message }, guildId);
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(errorText)
-                .setColor('#ff0000');
+                .setDescription(errorText);
             await editResponse({ embeds: [embed] });
         }
     },

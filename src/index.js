@@ -7,7 +7,6 @@ import {
     Collection,
     ChannelType,
     PermissionsBitField,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
@@ -16,6 +15,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import Logger from './utils/logger.js';
+import { OpenZeroEmbed } from './utils/embed.js';
 import { config } from './config.js';
 import { t, setLanguage } from './utils/i18n.js';
 import { detectLanguageWithAI } from './API/ai_manager.js';
@@ -255,8 +255,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             );
             const closeBtnLabel = await t('commands.ticket.close_btn', {}, guildId);
 
-            const embed = new EmbedBuilder()
-                .setColor('#20f0f2')
+            const embed = new OpenZeroEmbed()
                 .setTitle(setupTitle)
                 .setDescription(createdMsg)
                 .setTimestamp();

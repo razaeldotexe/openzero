@@ -19,8 +19,7 @@ export default {
         if (!context.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(await t('commands.clear.no_perms', {}, guildId))
-                .setColor('#ff0000');
+                .setDescription(await t('commands.clear.no_perms', {}, guildId));
             return context.reply({
                 embeds: [embed],
                 ephemeral: true,
@@ -37,8 +36,7 @@ export default {
         if (isNaN(amount) || amount < 1 || amount > 100) {
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(await t('commands.clear.invalid', {}, guildId))
-                .setColor('#ff0000');
+                .setDescription(await t('commands.clear.invalid', {}, guildId));
             return context.reply({
                 embeds: [embed],
                 ephemeral: true,

@@ -104,8 +104,7 @@ export default {
                     const errorText = await t('common.error', { error: error.message }, guildId);
                     const embed = new OpenZeroEmbed({}, context)
                         .setTitle(await t('common.error_title', {}, guildId))
-                        .setDescription(errorText)
-                        .setColor('#ff0000');
+                        .setDescription(errorText);
                     return await editResponse({ embeds: [embed] });
                 }
             }
@@ -114,8 +113,7 @@ export default {
                 const invalidMsg = await t('commands.language.invalid', {}, guildId);
                 const embed = new OpenZeroEmbed({}, context)
                     .setTitle(await t('common.error_title', {}, guildId))
-                    .setDescription(invalidMsg)
-                    .setColor('#ff0000');
+                    .setDescription(invalidMsg);
                 return await editResponse({ embeds: [embed] });
             }
 
@@ -177,8 +175,7 @@ export default {
                     const invalidMsg = await t('commands.language.invalid', {}, guildId);
                     const embed = new OpenZeroEmbed({}, context)
                         .setTitle(await t('common.error_title', {}, guildId))
-                        .setDescription(invalidMsg)
-                        .setColor('#ff0000');
+                        .setDescription(invalidMsg);
                     return await editResponse({ embeds: [embed] });
                 }
             } catch (error) {
@@ -186,8 +183,7 @@ export default {
                 const errorText = await t('common.error', { error: error.message }, guildId);
                 const embed = new OpenZeroEmbed({}, context)
                     .setTitle(await t('common.error_title', {}, guildId))
-                    .setDescription(errorText)
-                    .setColor('#ff0000');
+                    .setDescription(errorText);
                 return await editResponse({ embeds: [embed] });
             }
         }

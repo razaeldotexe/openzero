@@ -19,8 +19,7 @@ export default {
         if (!context.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(await t('commands.kick.no_perms', {}, guildId))
-                .setColor('#ff0000');
+                .setDescription(await t('commands.kick.no_perms', {}, guildId));
             return context.reply({
                 embeds: [embed],
                 ephemeral: true,
@@ -39,8 +38,7 @@ export default {
             if (args.length === 0) {
                 const embed = new OpenZeroEmbed({}, context)
                     .setTitle(await t('common.error_title', {}, guildId))
-                    .setDescription(await t('commands.kick.mention', {}, guildId))
-                    .setColor('#ff0000');
+                    .setDescription(await t('commands.kick.mention', {}, guildId));
                 return context.reply({ embeds: [embed] });
             }
             const userId = args[0].replace(/[<@!>]/g, '');
@@ -53,8 +51,7 @@ export default {
         if (!target) {
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(await t('commands.kick.mention', {}, guildId))
-                .setColor('#ff0000');
+                .setDescription(await t('commands.kick.mention', {}, guildId));
             return context.reply({
                 embeds: [embed],
                 ephemeral: true,
@@ -63,8 +60,7 @@ export default {
         if (!target.kickable) {
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(await t('commands.kick.unable', {}, guildId))
-                .setColor('#ff0000');
+                .setDescription(await t('commands.kick.unable', {}, guildId));
             return context.reply({
                 embeds: [embed],
                 ephemeral: true,

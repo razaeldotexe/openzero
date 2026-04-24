@@ -23,8 +23,7 @@ export default {
             const msg = await t('commands.product.query_required', {}, guildId);
             const embed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(msg)
-                .setColor('#ff0000');
+                .setDescription(msg);
             return context.reply({ embeds: [embed], ephemeral: true });
         }
 
@@ -54,8 +53,7 @@ export default {
                 const noResults = await t('commands.product.no_results', { query }, guildId);
                 const embed = new OpenZeroEmbed({}, context)
                     .setTitle(await t('common.error_title', {}, guildId))
-                    .setDescription(noResults)
-                    .setColor('#ff0000');
+                    .setDescription(noResults);
                 return await editResponse({ embeds: [embed] });
             }
 
@@ -95,8 +93,7 @@ export default {
             const errorMsg = await t('common.error', { error: error.message }, guildId);
             const errorEmbed = new OpenZeroEmbed({}, context)
                 .setTitle(await t('common.error_title', {}, guildId))
-                .setDescription(errorMsg)
-                .setColor('#ff0000');
+                .setDescription(errorMsg);
             await editResponse({ embeds: [errorEmbed] });
         }
     },

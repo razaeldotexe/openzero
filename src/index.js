@@ -45,7 +45,10 @@ client.commands = new Collection();
 const cooldowns = new Collection();
 
 const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
+let commandFiles = [];
+if (fs.existsSync(commandsPath)) {
+    commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
+}
 
 for (const file of commandFiles) {
     try {
@@ -78,9 +81,8 @@ client.once(Events.ClientReady, async (readyClient) => {
     // Initialize Database
     await initDatabase();
 
-    const activityText = await t('commands.help.description');
-    readyClient.user.setActivity(`!help | ${activityText}`, {
-        type: ActivityType.Playing,
+    readyClient.user.setActivity('System standby', {
+        type: ActivityType.Watching,
     });
 
     // Initialize monitoring task

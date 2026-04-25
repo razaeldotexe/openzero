@@ -1,27 +1,6 @@
 import 'dotenv/config';
 import { REST, Routes } from 'discord.js';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath, pathToFileURL } from 'url';
 import Logger from './utils/logger.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const commands = [];
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
-
-// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
-for (const file of commandFiles) {
-    const filePath = pathToFileURL(path.join(commandsPath, file)).href;
-    const { default: command } = await import(filePath);
-    if (command && command.data) {
-        commands.push(command.data.toJSON());
-    } else {
-        Logger.warn(`[Deploy] The command at ${file} is missing a required "data" property.`);
-    }
-}
 
 // Construct and prepare an instance of the REST module
 const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env;
@@ -35,25 +14,24 @@ if (!DISCORD_TOKEN || !CLIENT_ID) {
 
 const rest = new REST().setToken(DISCORD_TOKEN);
 
-// and deploy your commands!
+// Clear all commands
 (async () => {
     try {
-        Logger.info(`Started refreshing ${commands.length} application (/) commands.`);
+        Logger.info('Started clearing all application (/) commands.');
 
-        // The put method is used to fully refresh all commands in the guild with the current set
-        // If GUILD_ID is not provided in .env, it will deploy globally
-        const data = GUILD_ID
-            ? await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
-                  body: commands,
-              })
-            : await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
-
-        const scope = GUILD_ID ? `guild (${GUILD_ID})` : 'global';
-        Logger.info(
-            `Successfully reloaded ${data.length} application (/) commands [Scope: ${scope}].`
-        );
+        // Passing an empty array to body will clear all existing commands
+        if (GUILD_ID) {
+            await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
+                body: [],
+            });
+            Logger.info(
+                `Successfully cleared all application (/) commands from guild ${GUILD_ID}.`
+            );
+        } else {
+            await rest.put(Routes.applicationCommands(CLIENT_ID), { body: [] });
+            Logger.info('Successfully cleared all global application (/) commands.');
+        }
     } catch (error) {
-        // And of course, make sure you catch and log any errors!
-        Logger.error('[Deploy] Error deploying commands:', error);
+        Logger.error('[Deploy] Error clearing commands:', error);
     }
 })();

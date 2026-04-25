@@ -4,9 +4,11 @@
 
 A modular **Discord Bot** built with **Discord.js v14** using a **Modular Command Handler** structure and **ES Modules (ESM)**.
 
+**STATUS: All legacy commands have been removed. The bot is in standby.**
+
 ## Tech Stack
 
-- **Runtime:** Node.js (v16.11.0+)
+- **Runtime:** Node.js (v18+)
 - **Framework:** Discord.js v14
 - **Module System:** ES Modules (`"type": "module"`)
 - **Environment:** dotenv
@@ -17,18 +19,8 @@ A modular **Discord Bot** built with **Discord.js v14** using a **Modular Comman
 ```
 openzero/
 ├── index.js              # Main entry point, command handler, event listeners
-├── commands/             # Modular command files
-│   ├── ping.js
-│   ├── wikipedia.js
-│   ├── openlibrary.js
-│   ├── arxiv.js
-│   ├── kick.js
-│   ├── ban.js
-│   ├── clear.js
-│   └── info.js
-├── API/                  # Python API fetcher scripts
-│   ├── wiki_fetcher.py
-│   └── arxiv_fetcher.py
+├── commands/             # Modular command files (Currently Empty)
+├── API/                  # API managers
 ├── .env.example          # Environment template
 └── package.json
 ```
@@ -37,17 +29,12 @@ openzero/
 
 - **Prefix:** `!`
 - **Required Intents:** Guilds, GuildMessages, MessageContent
-- **Adding Commands:** Create a `.js` file in `/commands/` exporting a default object with `name`, `description`, and `execute(message, args)`.
-
-## External APIs
-
-- **Wikipedia** - Info search with page navigation
-- **Open Library** - Book collection search
-- **arXiv** - Academic paper search
+- **Commands:** No commands are currently active.
 
 ## Commands
 
 - `npm start` - Run bot
 - `npm run dev` - Run with nodemon
+- `npm run deploy` - Clear all slash commands from Discord
 - `npm test` - Run tests
 - `npm run lint` / `npm run format` - Code quality

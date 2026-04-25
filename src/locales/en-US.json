@@ -6,6 +6,7 @@
         "success": "Action Successful",
         "access_denied": "Access denied.",
         "query_required": "Please provide a search keyword.",
+        "cooldown": "Slow down! Please wait {time} more seconds before using this command again.",
         "help_translate": "Help Translate this Bot"
     },
     "commands": {

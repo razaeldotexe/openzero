@@ -42,6 +42,7 @@ const client = new Client({
 
 const PREFIX = '!';
 client.commands = new Collection();
+const cooldowns = new Collection();
 
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
@@ -148,6 +149,28 @@ client.on(Events.MessageCreate, async (message) => {
 
     const guildId = message.guild?.id;
 
+    // Cooldown Logic
+    if (!cooldowns.has(command.name)) {
+        cooldowns.set(command.name, new Collection());
+    }
+
+    const now = Date.now();
+    const timestamps = cooldowns.get(command.name);
+    const cooldownAmount = (command.cooldown || 3) * 1000;
+
+    if (timestamps.has(message.author.id)) {
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+        if (now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000;
+            const cooldownMsg = await t('common.cooldown', { time: timeLeft.toFixed(1) }, guildId);
+            return message.reply(cooldownMsg);
+        }
+    }
+
+    timestamps.set(message.author.id, now);
+    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
     // Automatic Language Detection for input-based commands
     if (args.length > 0 && args.join(' ').length > 5) {
         try {
@@ -182,6 +205,32 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isChatInputCommand()) {
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
+
+        // Cooldown Logic
+        if (!cooldowns.has(command.name)) {
+            cooldowns.set(command.name, new Collection());
+        }
+
+        const now = Date.now();
+        const timestamps = cooldowns.get(command.name);
+        const cooldownAmount = (command.cooldown || 3) * 1000;
+
+        if (timestamps.has(interaction.user.id)) {
+            const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+                const cooldownMsg = await t(
+                    'common.cooldown',
+                    { time: timeLeft.toFixed(1) },
+                    guildId
+                );
+                return interaction.reply({ content: cooldownMsg, ephemeral: true });
+            }
+        }
+
+        timestamps.set(interaction.user.id, now);
+        setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
 
         try {
             await command.execute(interaction);

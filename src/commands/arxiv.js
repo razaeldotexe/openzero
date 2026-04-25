@@ -87,7 +87,8 @@ export default {
             };
 
             const generateButtons = async (index) => {
-                const row = new ActionRowBuilder().addComponents(
+                const paper = papers[index];
+                const buttons = [
                     new ButtonBuilder()
                         .setCustomId('prev')
                         .setLabel(await t('commands.wikipedia.prev', {}, guildId))
@@ -98,12 +99,18 @@ export default {
                         .setLabel(await t('commands.wikipedia.next', {}, guildId))
                         .setStyle(ButtonStyle.Secondary)
                         .setDisabled(index === papers.length - 1),
-                    new ButtonBuilder()
-                        .setLabel(await t('commands.arxiv.open_pdf', {}, guildId))
-                        .setStyle(ButtonStyle.Link)
-                        .setURL(papers[index].pdf_url)
-                );
-                return row;
+                ];
+
+                if (paper.pdf_url && paper.pdf_url.startsWith('http')) {
+                    buttons.push(
+                        new ButtonBuilder()
+                            .setLabel(await t('commands.arxiv.open_pdf', {}, guildId))
+                            .setStyle(ButtonStyle.Link)
+                            .setURL(paper.pdf_url)
+                    );
+                }
+
+                return new ActionRowBuilder().addComponents(buttons);
             };
 
             const embed = await generateEmbed(currentIndex);

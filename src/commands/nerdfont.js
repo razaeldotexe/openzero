@@ -72,7 +72,8 @@ export default {
             };
 
             const generateButtons = async (index) => {
-                const row = new ActionRowBuilder().addComponents(
+                const font = fonts[index];
+                const buttons = [
                     new ButtonBuilder()
                         .setCustomId('prev')
                         .setLabel(await t('commands.wikipedia.prev', {}, guildId))
@@ -83,12 +84,18 @@ export default {
                         .setLabel(await t('commands.wikipedia.next', {}, guildId))
                         .setStyle(ButtonStyle.Secondary)
                         .setDisabled(index === fonts.length - 1),
-                    new ButtonBuilder()
-                        .setLabel(await t('commands.nerdfont.download_link', {}, guildId))
-                        .setStyle(ButtonStyle.Link)
-                        .setURL(fonts[index].downloadUrl)
-                );
-                return row;
+                ];
+
+                if (font.downloadUrl && font.downloadUrl.startsWith('http')) {
+                    buttons.push(
+                        new ButtonBuilder()
+                            .setLabel(await t('commands.nerdfont.download_link', {}, guildId))
+                            .setStyle(ButtonStyle.Link)
+                            .setURL(font.downloadUrl)
+                    );
+                }
+
+                return new ActionRowBuilder().addComponents(buttons);
             };
 
             const embed = await generateEmbed(currentIndex);

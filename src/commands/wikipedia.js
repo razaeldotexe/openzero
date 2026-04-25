@@ -35,16 +35,20 @@ export default {
                 .setDescription(`${data.summary} `)
                 .setAISummary(data.ai_summary);
 
-            const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setLabel(await t('commands.wikipedia.full_link', {}, guildId))
-                    .setStyle(ButtonStyle.Link)
-                    .setURL(data.fullurl)
-            );
+            const components = [];
+            if (data.fullurl && data.fullurl.startsWith('http')) {
+                const row = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setLabel(await t('commands.wikipedia.full_link', {}, guildId))
+                        .setStyle(ButtonStyle.Link)
+                        .setURL(data.fullurl)
+                );
+                components.push(row);
+            }
 
             return isInteraction
-                ? context.editReply({ embeds: [embed], components: [row] })
-                : context.reply({ embeds: [embed], components: [row] });
+                ? context.editReply({ embeds: [embed], components })
+                : context.reply({ embeds: [embed], components });
         } catch (error) {
             Logger.error('Wikipedia command error:', error);
             const errorMsg = error.message.includes('404')

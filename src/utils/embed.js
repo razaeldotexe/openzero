@@ -18,35 +18,35 @@ export class OpenZeroEmbed extends EmbedBuilder {
             this.setColor('#58c2e6');
         }
 
-        // Set default footer if not provided
-        if (!this.data.footer) {
-            const footerText = config.metadata?.footerText || 'OpenZero Resource';
-            const footerIcon = context?.client?.user?.displayAvatarURL() || null;
+        // Default branding (can be overridden or cleared by setStandardLayout)
+        const footerText = config.metadata?.footerText || 'OpenZero Resource';
+        const footerIcon = context?.client?.user?.displayAvatarURL() || null;
 
-            this.setFooter({
-                text: footerText,
-                iconURL: footerIcon,
-            });
-        }
-
-        // Set default timestamp if not provided
-        if (!this.data.timestamp) {
-            this.setTimestamp();
-        }
+        this.setFooter({
+            text: footerText,
+            iconURL: footerIcon,
+        });
+        this.setTimestamp();
     }
 
     /**
      * Sets the standardized layout from the reference image.
+     * Removes footer and timestamp for a cleaner look.
      * @param {import('discord.js').User} user - The user who requested the command.
      * @param {string} commandName - The name of the command (e.g., '/arxiv').
      * @param {string} featureName - The title of the feature/result.
      */
     setStandardLayout(user, commandName, featureName) {
         this.setAuthor({
-            name: `${user.username} Request: ${commandName}`,
+            name: `${user.username}: ${commandName}`,
             iconURL: user.displayAvatarURL(),
         });
         this.setTitle(featureName);
+
+        // Clean up footer and timestamp to match the minimalistic reference image
+        this.data.footer = null;
+        this.data.timestamp = null;
+
         return this;
     }
 
@@ -58,7 +58,9 @@ export class OpenZeroEmbed extends EmbedBuilder {
         if (!summary) return this;
 
         const currentDesc = this.data.description || '';
-        const aiSection = `\n\n**AI Summary**\n${summary}`;
+        // Clean up "TL;DR:" if it already exists in the string to avoid redundancy with the header
+        const cleanSummary = summary.replace(/^TL;DR:\s*/i, '');
+        const aiSection = `\n\n**AI Summary**\n${cleanSummary}`;
 
         this.setDescription(currentDesc + aiSection);
         return this;

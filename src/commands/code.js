@@ -118,19 +118,9 @@ export default {
             }
 
             const user = interaction.user;
-            const embed = new OpenZeroEmbed({}, interaction).setStandardLayout(
-                user,
-                '/code ' + subcommand,
-                title
-            );
-
-            // Discord limits field values to 1024 chars, and descriptions to 4096.
-            // If result is large, we'll split or use description.
-            if (result.length > 4000) {
-                embed.setDescription(result.substring(0, 4000) + '...');
-            } else {
-                embed.setDescription(result);
-            }
+            const embed = new OpenZeroEmbed({}, interaction)
+                .setStandardLayout(user, '/code ' + subcommand, title)
+                .setDescription(`${result.substring(0, 4000)} `);
 
             return interaction.editReply({ embeds: [embed] });
         } catch (error) {

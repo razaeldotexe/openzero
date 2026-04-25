@@ -75,11 +75,13 @@ export default {
             const generateEmbed = async (index) => {
                 const item = results[index];
                 const user = isInteraction ? context.user : context.author;
-                const embed = new OpenZeroEmbed({}, context).setStandardLayout(
-                    user,
-                    '/fda',
-                    `FDA ${category.toUpperCase()} Result: ${query}`
-                );
+                const embed = new OpenZeroEmbed({}, context)
+                    .setStandardLayout(
+                        user,
+                        '/fda',
+                        `FDA ${category.toUpperCase()} Result: ${query}`
+                    )
+                    .setDescription('Result content below: ');
 
                 if (category === 'drug') {
                     embed.addFields(

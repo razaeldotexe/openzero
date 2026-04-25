@@ -52,7 +52,7 @@ export default {
                 const user = isInteraction ? context.user : context.author;
                 const embed = new OpenZeroEmbed({}, context)
                     .setStandardLayout(user, '/arxiv', paper.title)
-                    .setDescription(paper.summary.substring(0, 1000) + '...');
+                    .setDescription(`${paper.summary.substring(0, 1000)}... `);
 
                 embed.addFields(
                     {

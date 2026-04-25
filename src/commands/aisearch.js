@@ -43,7 +43,7 @@ export default {
             const user = isInteraction ? context.user : context.author;
             const embed = new OpenZeroEmbed({}, context)
                 .setStandardLayout(user, '/aisearch', `AI Search Results: ${query}`)
-                .setDescription(await t('commands.product.searching', {}, guildId));
+                .setDescription(`${await t('commands.product.searching', {}, guildId)} `);
 
             for (const [i, p] of products.entries()) {
                 const priceStr = p.price

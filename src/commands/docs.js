@@ -40,6 +40,7 @@ export default {
             const user = isInteraction ? context.user : context.author;
             const embed = new OpenZeroEmbed({}, context)
                 .setStandardLayout(user, '/docs', `Docs Search: ${query}`)
+                .setDescription('Synthesized result below: ')
                 .setAISummary(data.answer);
 
             if (data.source) {

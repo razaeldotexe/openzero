@@ -32,7 +32,7 @@ export default {
 
             const embed = new OpenZeroEmbed({}, context)
                 .setStandardLayout(user, '/wikipedia', data.title)
-                .setDescription(data.summary)
+                .setDescription(`${data.summary} `)
                 .setAISummary(data.ai_summary);
 
             const row = new ActionRowBuilder().addComponents(

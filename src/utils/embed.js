@@ -34,6 +34,35 @@ export class OpenZeroEmbed extends EmbedBuilder {
             this.setTimestamp();
         }
     }
+
+    /**
+     * Sets the standardized layout from the reference image.
+     * @param {import('discord.js').User} user - The user who requested the command.
+     * @param {string} commandName - The name of the command (e.g., '/arxiv').
+     * @param {string} featureName - The title of the feature/result.
+     */
+    setStandardLayout(user, commandName, featureName) {
+        this.setAuthor({
+            name: `${user.username} Request: ${commandName}`,
+            iconURL: user.displayAvatarURL(),
+        });
+        this.setTitle(featureName);
+        return this;
+    }
+
+    /**
+     * Adds an AI Summary section to the embed.
+     * @param {string} summary - The AI-generated summary content.
+     */
+    setAISummary(summary) {
+        if (!summary) return this;
+
+        const currentDesc = this.data.description || '';
+        const aiSection = `\n\n**AI Summary**\n${summary}`;
+
+        this.setDescription(currentDesc + aiSection);
+        return this;
+    }
 }
 
 export default OpenZeroEmbed;

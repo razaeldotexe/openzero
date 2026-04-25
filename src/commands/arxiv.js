@@ -49,14 +49,10 @@ export default {
 
             const generateEmbed = async (index) => {
                 const paper = papers[index];
-                const embed = new OpenZeroEmbed(
-                    {
-                        title: paper.title,
-                        url: paper.pdf_url,
-                        description: paper.summary.substring(0, 1000) + '...',
-                    },
-                    context
-                );
+                const user = isInteraction ? context.user : context.author;
+                const embed = new OpenZeroEmbed({}, context)
+                    .setStandardLayout(user, '/arxiv', paper.title)
+                    .setDescription(paper.summary.substring(0, 1000) + '...');
 
                 embed.addFields(
                     {
@@ -76,10 +72,7 @@ export default {
                 );
 
                 if (aiSummary && index === 0) {
-                    embed.setFields([
-                        { name: 'AI Summary (TL;DR)', value: aiSummary },
-                        ...embed.data.fields,
-                    ]);
+                    embed.setAISummary(aiSummary);
                 }
 
                 embed.setFooter({

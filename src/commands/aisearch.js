@@ -40,13 +40,10 @@ export default {
                     : context.reply(noResultsMsg);
             }
 
-            const embed = new OpenZeroEmbed(
-                {
-                    title: `AI Search Results: ${query}`,
-                    description: await t('commands.product.searching', {}, guildId),
-                },
-                context
-            );
+            const user = isInteraction ? context.user : context.author;
+            const embed = new OpenZeroEmbed({}, context)
+                .setStandardLayout(user, '/aisearch', `AI Search Results: ${query}`)
+                .setDescription(await t('commands.product.searching', {}, guildId));
 
             for (const [i, p] of products.entries()) {
                 const priceStr = p.price

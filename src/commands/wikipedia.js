@@ -28,19 +28,12 @@ export default {
         try {
             const lang = await getLanguage(guildId);
             const data = await APIClient.post('/research/wikipedia', { query, lang });
+            const user = isInteraction ? context.user : context.author;
 
-            const embed = new OpenZeroEmbed(
-                {
-                    title: data.title,
-                    url: data.fullurl,
-                    description: data.summary,
-                },
-                context
-            );
-
-            if (data.ai_summary) {
-                embed.addFields({ name: 'AI Summary (TL;DR)', value: data.ai_summary });
-            }
+            const embed = new OpenZeroEmbed({}, context)
+                .setStandardLayout(user, '/wikipedia', data.title)
+                .setDescription(data.summary)
+                .setAISummary(data.ai_summary);
 
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()

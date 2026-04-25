@@ -37,13 +37,10 @@ export default {
             const endpoint = `/docs?q=${encodeURIComponent(query)}${framework ? `&framework=${encodeURIComponent(framework)}` : ''}&lang=${encodeURIComponent(lang)}`;
             const data = await APIClient.get(endpoint);
 
-            const embed = new OpenZeroEmbed(
-                {
-                    title: `Docs Search: ${query}`,
-                    description: data.answer,
-                },
-                context
-            );
+            const user = isInteraction ? context.user : context.author;
+            const embed = new OpenZeroEmbed({}, context)
+                .setStandardLayout(user, '/docs', `Docs Search: ${query}`)
+                .setAISummary(data.answer);
 
             if (data.source) {
                 embed.addFields({ name: 'Source', value: data.source, inline: true });

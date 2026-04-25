@@ -74,11 +74,11 @@ export default {
 
             const generateEmbed = async (index) => {
                 const item = results[index];
-                const embed = new OpenZeroEmbed(
-                    {
-                        title: `FDA ${category.toUpperCase()} Result: ${query}`,
-                    },
-                    context
+                const user = isInteraction ? context.user : context.author;
+                const embed = new OpenZeroEmbed({}, context).setStandardLayout(
+                    user,
+                    '/fda',
+                    `FDA ${category.toUpperCase()} Result: ${query}`
                 );
 
                 if (category === 'drug') {
@@ -129,7 +129,7 @@ export default {
                 }
 
                 if (aiSummary && index === 0) {
-                    embed.setDescription(`**AI Summary (TL;DR)**\n${aiSummary}`);
+                    embed.setAISummary(aiSummary);
                 }
 
                 embed.setFooter({

@@ -117,7 +117,12 @@ export default {
                 title = 'Refactored Code';
             }
 
-            const embed = new OpenZeroEmbed({ title }, interaction);
+            const user = interaction.user;
+            const embed = new OpenZeroEmbed({}, interaction).setStandardLayout(
+                user,
+                '/code ' + subcommand,
+                title
+            );
 
             // Discord limits field values to 1024 chars, and descriptions to 4096.
             // If result is large, we'll split or use description.

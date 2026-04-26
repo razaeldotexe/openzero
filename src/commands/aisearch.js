@@ -7,7 +7,7 @@ import Logger from '../utils/logger.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('aisearch')
-        .setDescription('AI-powered search for products and general info')
+        .setDescription('Thorough AI-powered deep search for products and info')
         .addStringOption((option) =>
             option.setName('query').setDescription('What are you looking for?').setRequired(true)
         )
@@ -31,7 +31,7 @@ export default {
 
         try {
             const lang = await getLanguage(guildId);
-            const response = await APIClient.post('/ai/search', { query, limit, lang });
+            const response = await APIClient.post('/ai/alpha/search', { query, limit, lang });
             const results = response.results || [];
             const aiSummary = response.ai_summary;
 
@@ -44,7 +44,7 @@ export default {
 
             const user = isInteraction ? context.user : context.author;
             const embed = new OpenZeroEmbed()
-                .setStandardLayout(user, '/aisearch', `AI Search: ${query}`)
+                .setStandardLayout(user, '/aisearch', `AI Deep Search: ${query}`)
                 .setAISummary(aiSummary);
 
             if (results.length > 0) {

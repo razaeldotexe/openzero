@@ -24,9 +24,9 @@
             "footer": "Proyek OpenZero • Data Terbuka & Otomasi Cerdas"
         },
         "aisearch": {
-            "description": "Pencarian web dan sintesis berbasis AI",
+            "description": "Pencarian web mendalam (Deep Search) berbasis AI",
             "query_required": "Harap masukkan kata kunci pencarian.",
-            "searching": "Mencari di web dan mensintesis dengan AI...",
+            "searching": "Melakukan deep search dan mensintesis dengan AI...",
             "no_results": "Hasil tidak ditemukan untuk \"{query}\".",
             "price": "Harga",
             "footer": "Browser Pencarian berbasis AI"

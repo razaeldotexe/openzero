@@ -24,9 +24,9 @@
             "footer": "OpenZero Project • Open Data & Smart Automation"
         },
         "aisearch": {
-            "description": "AI-powered web search and synthesis",
+            "description": "Thorough AI-powered deep search and synthesis",
             "query_required": "Please provide a search keyword.",
-            "searching": "Searching the web and synthesizing with AI...",
+            "searching": "Performing deep search and synthesizing with AI...",
             "no_results": "No results found for \"{query}\".",
             "price": "Price",
             "footer": "AI-powered Search Browser"

@@ -126,6 +126,18 @@
             "closing": "Closing ticket...",
             "no_perms_setup": "You need `Administrator` permission to setup the ticket system."
         },
+        "tools": {
+            "name": "tools",
+            "description": "Deterministic automation tools (JSON, Crypto, URL, Time)",
+            "json_title": "JSON Utility",
+            "format_title": "Code Formatter",
+            "crypto_title": "Crypto & Encoding",
+            "url_title": "URL Utility",
+            "time_title": "Timestamp Utility",
+            "result_label": "Result",
+            "error_label": "Error",
+            "invalid_json": "Invalid JSON input provided."
+        },
         "weather": {
             "name": "weather",
             "description": "Check the weather for a city or coordinates",

@@ -29,7 +29,7 @@
             "searching": "Performing deep search and synthesizing with AI...",
             "no_results": "No results found for \"{query}\".",
             "price": "Price",
-            "footer": "AI-powered Search Browser"
+            "footer": "Brave AI Search Browser"
         },
         "arxiv": {
             "description": "Search for scientific papers on arXiv",

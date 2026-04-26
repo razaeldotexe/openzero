@@ -44,7 +44,7 @@ export default {
 
             const user = isInteraction ? context.user : context.author;
             const embed = new OpenZeroEmbed()
-                .setStandardLayout(user, '/aisearch', `AI Deep Search: ${query}`)
+                .setStandardLayout(user, '/aisearch', `AI Search (Brave): ${query}`)
                 .setAISummary(aiSummary);
 
             if (results.length > 0) {
